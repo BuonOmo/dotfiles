@@ -84,6 +84,8 @@ source $ZSH/oh-my-zsh.sh
 PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 PATH="$ZSH_CUSTOM/bin:$PATH"
 
+source $ZSH_CUSTOM/aliases
+
 autoload -Uz compinit && compinit
 
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
