@@ -1,5 +1,7 @@
 # Dotfiles
 
+Greatly inspired by https://www.atlassian.com/git/tutorials/dotfiles
+
 Install with:
 
 ```zsh
