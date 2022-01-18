@@ -1,0 +1,18 @@
+# WIP
+manify() {
+	local path
+
+	(( $# != 2 )) && {
+		>&2 echo "$0: wrong number of arguments"
+		>&2 echo "usage: $0 <section> <command>"
+		return 1
+	}
+
+	path="/usr/local/share/man/man$1/$2.$1"
+
+	[ -f "$path" ] && {
+		>&2 echo "$0: file already exists ($path)"
+		return 1
+	}
+	echo "help2man -s $1 $2 > $path"
+}

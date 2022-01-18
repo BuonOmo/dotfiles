@@ -1,0 +1,4 @@
+cdgem() {
+	local pat="bundle info --path $1"
+	[[ -n "$pat" ]] && cd "$pat"
+}

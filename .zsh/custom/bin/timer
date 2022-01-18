@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+def usage
+  <<~TEXT
+    usage:
+      timer 1h 10m 20s
+      timer 3m 'eggs!'
+      timer 08:00 BEEP wake up
+      timer 10s 'keep working!' &
+  TEXT
+end
+
+if ARGV.empty?
+  warn usage
+  exit 1
+end
+
+time = 0
+comment = []
+beep = false
+
+while (arg = ARGV.shift)
+  case arg
+  when /\A(\d+)([dhms])\z/
+    time += case $2
+            when ?d then $1.to_i * 86_400
+            when ?h then $1.to_i * 3_600
+            when ?m then $1.to_i * 60
+            when ?s then $1.to_i
+            end
+  when /\A(\d{2}):(\d{2})\z/
+    alarm_sec = $1.to_i * 3_600 + $2.to_i * 60
+    now_sec = Time.now.then { _1.hour * 3_600 + _1.min * 60 + _1.sec }
+    alarm_sec += 86_400 if now_sec >= alarm_sec
+    time = (alarm_sec - now_sec)
+  when /\Ab(ee|i)p\z/i
+    beep = true
+  else
+    comment << arg
+  end
+end
+
+system("sleep", time.to_s)
+
+notif = %w(terminal-notifier)
+notif.concat %w(-sound default) if beep
+notif.concat ['-message', comment.any? ? comment.join(' ') : 'beep'] if beep || comment.any?
+
+system(*notif) if notif.size > 1

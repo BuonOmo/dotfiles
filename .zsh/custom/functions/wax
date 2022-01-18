@@ -1,0 +1,30 @@
+# Watch and execute
+# Usage:
+#   wax my_exe
+#   wax some_folder_or_file some_exe
+function wax {
+    local watch=$1
+    local exe
+    local out
+	if (( $# > 1 )); then
+		exe="${@:2}"
+	else
+		exe=./$watch
+	fi
+
+	echo $exe
+    : ${COLUMNS:=$(tput cols)}
+
+    while (
+        zsh -c "$exe"
+        printf '—%.0s' {1..$COLUMNS}
+        out=$(fswatch --one-event \
+                      --recursive \
+                      --timestamp \
+                      --format-time '%d/%m/%Y %H:%M:%S' \
+                      $watch)
+        [[ $#out -gt 0 ]]
+    ); do
+       printf "%*s\n" $COLUMNS "$out"
+    done
+}

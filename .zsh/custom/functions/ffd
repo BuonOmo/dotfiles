@@ -1,0 +1,8 @@
+# fd with full path
+function ffd {
+	local d=$(pwd)
+	(
+		cd /
+		fd $@ $d
+	)
+}

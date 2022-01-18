@@ -1,0 +1,11 @@
+function nth {
+	if (( ${#} < 1 || ${#} > 2 )); then
+		echo -e "usage: $0 \e[4mline\e[0m [\e[4mfile\e[0m]"
+		return 1
+	fi
+	if (( $# > 1 )); then
+		sed "$1q;d" $2
+	else
+		sed "$1q;d"
+	fi
+}

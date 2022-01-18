@@ -1,0 +1,71 @@
+# Global aliases
+
+
+# Misc aliases
+
+alias clearall='tput reset' # Or many other solutions (https://stackoverflow.com/q/5367068/6320039)
+
+alias co='code --reuse-window .'
+alias cz='code ~/.zshrc'
+
+alias ip='curl https://ipinfo.io/ip'
+alias whereami='curl https://ipinfo.io | jq --raw-output .loc'
+
+alias rg='rg --no-heading'
+alias rgi='rg -i'
+
+alias codec='ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1'
+
+alias 10m='timer 10m'
+
+# Clipboard manipulation
+
+alias c=pbcopy
+alias p=pbpaste
+alias apostrophe='printf "’"|c'
+alias qr='p | qrencode -t UTF8i'
+
+alias upper='tr "a-z" "A-Z"' # or 'echo "${mystr:u}"'
+alias lower='ruby -pe "\$_.downcase!"' # or 'echo "${mystr:l}"'
+
+# Git specific aliases
+
+alias gbrm='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d'
+alias gcf='git commit --fixup'
+alias gcfh='git commit --fixup=HEAD'
+alias gcopa='git checkout --patch'
+alias grbim='git rebase -i master'
+alias grbom='git fetch; git rebase origin/master'
+alias grboim='git fetch; git rebase -i origin/master'
+alias grp='git rev-parse --short HEAD'
+alias commit=grp
+
+# Ruby specific aliases
+
+alias be='bundle exec'
+alias cdgems='cd $(rbenv prefix)/lib/ruby/gems/*/gems' # also 'bundle open'
+
+# Key bindings
+
+bindkey -s '^g' 'git status --short --branch^M'
+
+# Globals
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='code'
+fi
+
+# https://www.zsh.org/mla/users/2013/msg00691.html
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+export SAVEHIST=1000000000
+
+export MISC=$HOME/Dev/misc

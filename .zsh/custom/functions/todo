@@ -1,0 +1,16 @@
+function todo {
+	(( $# < 1 )) && cat ~/.todo && return
+
+	local id=1
+	[[ "$(tail ~/.todo)" =~ '#[0-9]+' ]] && id=$(($(tail -1 ~/.todo | grep -Eo '#\d+' | tr -d '#') + 1))
+	case "$@" in
+		-e|--edit|edit) $EDITOR ~/.todo ;;
+		-c|--clear|clear) sed -I '' -n 1p ~/.todo ;;
+		''|*[!0-9]*)
+			echo "- $@ $(tput bold)#$id$(tput sgr0)" >> ~/.todo
+		    echo "#$id"
+			;;
+		*) sed -I '' "/#$1/d" ~/.todo ;;
+	esac
+}
+unset '_comps[todo]'

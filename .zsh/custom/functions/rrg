@@ -1,0 +1,8 @@
+# rg with full path
+function rrg {
+	local d=$(pwd)
+	(
+		cd /
+		rg $@ $d
+	)
+}

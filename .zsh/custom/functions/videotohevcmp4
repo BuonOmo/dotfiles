@@ -1,0 +1,30 @@
+# WIP: convert to hevc and show duration.
+videotohevcmp4() (
+	local log ffmpeg_pid fps duration hours minutes seconds total_frame_count log_line done_frame_count
+	log=$(mktemp)
+	echo logfile is $log
+	ffmpeg -i $1 -c:v libx265 -c:a aac ${1%.*}.x265.mp4 2> $log &
+	ffmpeg_pid=$!
+
+	trap "kill -9 $ffmpeg_pid; rm $log" EXIT
+
+	echo ffmpeg_pid is $ffmpeg_pid
+	fps=$(ffprobe "$1" 2>&1 | sed -n "s/.*, \(.*\) tbr.*/\1/p")
+	duration=$(ffprobe "$1" 2>&1 | sed -n "s/.* Duration: \([^,]*\), .*/\1/p")
+	hours=$(echo $duration | cut -d":" -f1)
+	minutes=$(echo $duration | cut -d":" -f2)
+	seconds=$(echo $duration | cut -d":" -f3)
+	total_frame_count=$(echo "($hours*3600+$minutes*60+$seconds)*$fps" | bc | cut -d"." -f1)
+	while jobs -l | grep $ffmpeg_pid > /dev/null; do
+		sleep 1
+		log_line=$(tail -1 $log | rev | cut -d $'\r' -f 2 | rev)
+		done_frame_count=$(echo $log_line | cut -d" " -f1 | cut -d= -f2)
+		duration=$(echo $log_line | cut -d= -f6 | cut -d" " -f1)
+		hours=$(echo $duration | cut -d":" -f1)
+		minutes=$(echo $duration | cut -d":" -f2)
+		#seconds=$(echo $duration | cut -d":" -f3)
+		duration=$(bc <<< "60*$hours+$minutes")
+		echo "$(bc <<< "($total_frame_count-$done_frame_count)*$duration/$done_frame_count") minutes left"
+	done
+	rm $log
+)

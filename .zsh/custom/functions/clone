@@ -1,0 +1,15 @@
+function clone {
+	local all user repo
+
+	all="$1"
+	all="${all#'https://github.com/'}" # https
+	all="${all#'git@github.com:'}" # ssh
+	all="${all%'.git'}"
+
+	IFS='/' read -r user repo <<< "$all"
+
+	cd ~/Dev
+	take "$user"
+	git clone "git@github.com:$user/$repo.git"
+	cd "$repo"
+}

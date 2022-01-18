@@ -1,0 +1,9 @@
+[submodule ".zsh/custom/plugins/zsh-autosuggestions"]
+	path = .zsh/custom/plugins/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git
+[submodule ".zsh/custom/plugins/zsh-completions"]
+	path = .zsh/custom/plugins/zsh-completions
+	url = git@github.com:zsh-users/zsh-completions.git
+[submodule ".zsh/custom/plugins/zsh-command-time"]
+	path = .zsh/custom/plugins/zsh-command-time
+	url = git@github.com:BuonOmo/zsh-command-time.git
