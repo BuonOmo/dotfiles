@@ -88,6 +88,10 @@ source $ZSH_CUSTOM/aliases
 
 autoload -Uz compinit && compinit
 
+# Ruby stuff
+
+export RUBYOPT="-r$HOME/.ruby/debug.rb"
+
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 eval "$(rbenv init -)"
 
