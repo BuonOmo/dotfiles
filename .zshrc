@@ -93,7 +93,18 @@ autoload -Uz compinit && compinit
 export RUBYOPT="-r$HOME/.ruby/debug.rb"
 
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-eval "$(rbenv init -)"
+
+# Lazy load ruby/rbenv related stuff (see npm below for a more canonical example).
+shims=($HOME/.rbenv/shims/* rbenv)
+shims=(${shims:t})
+for shim in $shims; do
+	"$shim"() {
+		unfunction "$0"
+		[[ "$RBENV_SHELL" == "zsh" ]] || eval "$(rbenv init -)"
+		"$0" "$@"
+	}
+done
+unset shims
 
 # Autoload functions
 # https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
