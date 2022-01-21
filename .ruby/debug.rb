@@ -34,6 +34,13 @@ module Debug
   end
 
   # @param filter (see #match_method?)
+  # @example
+  #   trace(:require, kinds: :call) do |tp|
+  #     path = tp.binding.eval('path')
+  #     next unless path["rdoc"]
+  #     puts "#{path} at #{caller_locations(3, 1).first}"
+  #   end
+
   def trace(filter, kinds: %i(call c_call))
     kinds = Array(kinds)
     puts Internal.caller_loc + " Started tracing"
@@ -95,6 +102,7 @@ class String
   end
 end
 
-
-Kernel.include Debug
-include Debug
+def dbg
+  Kernel.include Debug
+  include Debug
+end
