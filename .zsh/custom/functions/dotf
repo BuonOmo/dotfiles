@@ -1,14 +1,14 @@
 # Helper to manipulate dotfiles.
 # Usage:
-#   dotf             # (un)aliases git to dotf, allowing usage of all git aliases
-#   dotf <git alias> # resolve <git alias> in dotf context
-#   dotf ...         # pass arguments to git in dotf context
+#   dotf                 # (un)aliases git to dotf, making it like using git normally (ex: dotf; git pull; dotf)
+#   dotf <git alias> ... # resolve <git alias> in dotf context (ex: dotf ga .zshrc)
+#   dotf ...             # pass arguments to git in dotf context (ex: dotf push)
 dotf() {
 	__dotf_hook() {
 		echo "(dotfile mode)"
 	}
 	local unaliased="$aliases[$1]"
-	if (( $# == 0 )); then
+	if (( $# == 0 )); then # Env mode
 		if [[ "$aliases[git]" = "dotf" ]]; then
 			unalias git
 			add-zsh-hook -d precmd __dotf_hook
@@ -17,9 +17,9 @@ dotf() {
 			add-zsh-hook precmd __dotf_hook
 			alias git=dotf
 		fi
-	elif [[ "$unaliased" = "git "* ]]; then
-		eval "${unaliased/git/dotf} $@"
-	else
+	elif [[ "$unaliased" = "git "* ]]; then # Alias resolving
+		eval "${unaliased/git/dotf} ${@:2}"
+	else # Default
 		/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 	fi
 }
