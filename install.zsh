@@ -10,42 +10,7 @@ die() {
 [[ d- "$HOME/.oh-my-zsh" ]] || sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 type brew > /dev/null || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-
-\
- \
-  \
-   \
-    \
-     \
-      \
-       \
-        \
-         \
-          \
-           \
-            \
-             \
-              \
-brew install   \
-autojump        \
-bat              \
-coreutils         \
-diff-so-fancy      \
-fd                  \
-gifski               \
-help2man              \
-hexyl                  \
-httpie                  \
-jq                       \
-openssl                   \
-parallel                   \
-qrencode                    \
-ripgrep                      \
-spark                         \
-sponge                         \
-terminal-notifier               \
-tree                             \
-youtube-dl
+brew bundle # See ~/Brewfile
 
 function dotfiles {
    /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
