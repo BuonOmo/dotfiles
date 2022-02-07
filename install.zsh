@@ -18,12 +18,16 @@ function dotfiles {
 }
 
 	git clone --bare git@github.com:BuonOmo/dotfiles.git $HOME/.dotfiles # If failing here, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh
-	mkdir -p .dotfiles.old
-	dotfiles checkout
-
-	if [[ $? != 0 ]]; then
-		dotfiles checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .dotfiles.old/{}
-	fi;
+	
+	# Backing up
+	mkdir -p $HOME/.dotfiles.old
+	for new_file in $(dotfile ls-tree --full-tree -r --name-only HEAD); do
+		[[ -f "$HOME/$new_file" ]] || continue
+		
+		echo "Backing up `~/$new_file` to `~/.dotfiles.old/$new_file`."
+		mv "$new_file" ".dotfiles.old/$new_file"
+	done
+	[[ -z "$(ls -A $HOME/.dotfiles.old)" ]] && rm -d $HOME/.dotfiles.old
 
 	dotfiles checkout
 	dotfiles config status.showUntrackedFiles no
