@@ -31,14 +31,14 @@ alias lower='ruby -pe "\$_.downcase!"' # or 'echo "${mystr:l}"'
 
 # Git specific aliases
 
-alias gbrm='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d'
+alias gbrm='git branch --merged | egrep -v "(^\*|master|main|dev)" | xargs git branch -d'
 alias gcf='git commit --fixup'
 # fixup to head, or the first commit which is not already a fixup.
 alias gcfh='git commit --fixup=$(git log --oneline | grep -Ev "^.{7} fixup" | head -1 | cut -d" " -f1)'
 alias gcopa='git checkout --patch'
-alias grbim='git rebase -i master'
-alias grbom='git fetch; git rebase origin/master'
-alias grboim='git fetch; git rebase -i origin/master'
+alias grbim='git rebase -i $(git_main_branch)'
+alias grbom='git fetch; git rebase origin/$(git_main_branch)'
+alias grboim='git fetch; git rebase -i origin/$(git_main_branch)'
 alias grp='git rev-parse --short HEAD'
 alias commit=grp
 
