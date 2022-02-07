@@ -21,7 +21,7 @@ function dotfiles {
 	
 	# Backing up
 	mkdir -p $HOME/.dotfiles.old
-	for new_file in $(dotfile ls-tree --full-tree -r --name-only HEAD); do
+	for new_file in $(dotfiles ls-tree --full-tree -r --name-only HEAD); do
 		[[ -f "$HOME/$new_file" ]] || continue
 		
 		echo "Backing up `~/$new_file` to `~/.dotfiles.old/$new_file`."
