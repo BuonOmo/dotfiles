@@ -13,8 +13,6 @@ die() {
 }
 type brew > /dev/null || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-brew bundle # See ~/Brewfile
-
 function dotfiles {
    /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 }
@@ -36,3 +34,5 @@ function dotfiles {
    done
 
 unfunction dotfiles
+
+brew bundle # See ~/Brewfile
