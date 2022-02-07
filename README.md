@@ -5,7 +5,7 @@ Greatly inspired by https://www.atlassian.com/git/tutorials/dotfiles
 Install with:
 
 ```zsh
-zsh $(curl -fsSL https://raw.githubusercontent.com/BuonOmo/dotfiles/main/install.zsh)
+zsh -c "$(curl -fsSL https://raw.githubusercontent.com/BuonOmo/dotfiles/main/install.zsh)"
 ```
 
 Update with:
