@@ -149,4 +149,4 @@ j() {
 }
 
 alias timezsh='for i in $(seq 1 10); do time zsh -lic exit; done'
-((USE_ZPROF == 1)) && zprof # Must always be at the end!
+((USE_ZPROF == 1)) && zprof || true # Must always be at the end!
