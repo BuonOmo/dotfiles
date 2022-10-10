@@ -1,0 +1,8 @@
+co() (
+	set -e
+	(( $# > 0 )) && j $@
+
+	code --reuse-window .
+)
+
+compdef _j co

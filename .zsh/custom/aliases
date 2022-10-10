@@ -6,7 +6,7 @@
 
 alias clearall='tput reset' # Or many other solutions (https://stackoverflow.com/q/5367068/6320039)
 
-alias co='code --reuse-window .'
+alias cg='code -g $(pbpaste)'
 alias cz='code ~/.zshrc'
 
 alias ip='curl https://ipinfo.io/ip'
