@@ -23,9 +23,13 @@ end
 
 # Show instance methods of an object, curated of well known std methods.
 def m(object, curation = [Object, Enumerable])
+  if object.is_a? Symbol # assume one wanted to type `method`
+    method(object)
+  end
+  irb_methods = object.methods.grep(/\Airb_/).flat_map { [_1, _1.to_s.delete_prefix("irb_").to_sym] }
   object.methods - curation.flat_map do |klass|
     klass.methods + klass.instance_methods
-  end
+  end - irb_methods
 end
 
 # Show history.
@@ -79,3 +83,15 @@ require_relative ".ruby/debug.rb"
 #   next unless path["rdoc"]
 #   puts "#{path} at #{caller_locations(3, 1).first}"
 # end
+
+module IrBang
+  def evaluate(context, statements, file = __FILE__, line = __LINE__)
+    if statements.start_with?(".")
+      system statements[1..-1]
+    else
+      super
+    end
+  end
+end
+
+IRB::WorkSpace.prepend IrBang
