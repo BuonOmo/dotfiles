@@ -1,0 +1,10 @@
+# Squash current branch from its departure point in main branch. You must run
+# this command when on your branch's last commit.
+git-squash() {
+	# https://stackoverflow.com/a/48524405/6320039
+	local main_commit="$(git merge-base HEAD main)"
+	local last_branch_commit="$(git rev-parse HEAD)"
+	git reset --soft "$main_commit"
+	# Preserve commits
+	git commit -em "$(git log --reverse --format=%B ${main_commit}..${last_branch_commit})"
+}

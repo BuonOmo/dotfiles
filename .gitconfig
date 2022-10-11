@@ -19,6 +19,7 @@
 [alias]
 	risette = !echo gouzi-gouzi
 	make-patch = "!bash -c \"git add .;git commit -m uncommited;git format-patch HEAD~1;git reset HEAD~1\""
+	squash = "!bash -c \". $ZSH_CUSTOM/functions/git-squash; git-squash\""
 	whatadded = log --diff-filter=A --
 [diff]
 	tool = vscode
