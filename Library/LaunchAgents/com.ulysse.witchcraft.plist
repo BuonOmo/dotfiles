@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>com.ulysse.witchcraft</string>
+	<key>LimitLoadToSessionType</key>
+	<array>
+		<string>Aqua</string>
+		<string>Background</string>
+		<string>LoginWindow</string>
+		<string>StandardIO</string>
+		<string>System</string>
+	</array>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/env</string>
+		<string>python3</string>
+		<string>-m</string>
+		<string>http.server</string>
+		<string>--directory</string>
+		<string>/Users/u.buonomo/Dev/BuonOmo/chrome-scripts</string>
+		<string>1234</string>
+	</array>
+	<key>StandardErrorPath</key>
+	<string>/Users/u.buonomo/Library/Logs/com.ulysse.witchcraft.stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/u.buonomo/Library/Logs/com.ulysse.witchcraft.stdout.log</string>
+	<key>RunAtLoad</key>
+	<true/>
+</dict>
+</plist>
