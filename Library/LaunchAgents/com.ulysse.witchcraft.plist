@@ -21,13 +21,13 @@
 		<string>-m</string>
 		<string>http.server</string>
 		<string>--directory</string>
-		<string>/Users/u.buonomo/Dev/BuonOmo/chrome-scripts</string>
-		<string>1234</string>
+		<string>CHROME_SCRIPT_PATH</string>
+		<string>PORT</string>
 	</array>
 	<key>StandardErrorPath</key>
-	<string>/Users/u.buonomo/Library/Logs/com.ulysse.witchcraft.stderr.log</string>
+	<string>HOME/Library/Logs/com.ulysse.witchcraft.stderr.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/u.buonomo/Library/Logs/com.ulysse.witchcraft.stdout.log</string>
+	<string>HOME/Library/Logs/com.ulysse.witchcraft.stdout.log</string>
 	<key>RunAtLoad</key>
 	<true/>
 </dict>

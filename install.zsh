@@ -18,12 +18,12 @@ function dotfiles {
 }
 
 	git clone --bare git@github.com:BuonOmo/dotfiles.git $HOME/.dotfiles # If failing here, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh
-	
+
 	# Backing up
 	mkdir -p $HOME/.dotfiles.old
 	for new_file in $(dotfiles ls-tree --full-tree -r --name-only HEAD); do
 		[[ -f "$HOME/$new_file" ]] || continue
-		
+
 		echo "Backing up `~/$new_file` to `~/.dotfiles.old/$new_file`."
 		mv "$new_file" ".dotfiles.old/$new_file"
 	done
@@ -32,7 +32,11 @@ function dotfiles {
 	dotfiles checkout
 	dotfiles config status.showUntrackedFiles no
 
-   for unwanted in $HOME/install.zsh $HOME/README.md $HOME/LICENSE; do
+	for sub_installation_script in $HOME/install/*; do
+		zsh $sub_installation_script
+	done
+
+   for unwanted in $HOME/install.zsh $HOME/install/* $HOME/README.md $HOME/LICENSE; do
       rm $unwanted
       dotfiles update-index --assume-unchanged $unwanted
    done

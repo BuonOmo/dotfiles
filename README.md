@@ -1,7 +1,5 @@
 # Dotfiles
 
-Greatly inspired by https://www.atlassian.com/git/tutorials/dotfiles
-
 Install with:
 
 ```zsh
@@ -23,3 +21,12 @@ dotf commit
 dotf push
 # PR welcome
 ```
+
+## Configuration
+
+Configuration is made by running the script with some env variables set.
+
+*`WITCHCRAFT_SCRIPT_PATH`* sets the path where your [witchcraft scripts](https://luciopaiva.com/witchcraft)
+are gonna be stored. If not set, the default will be `$HOME/Dev/BuonOmo/chrome-script` and the
+[corresponding repo](https://github.com/BuonOmo/chrome-scripts) will be downloaded accordingly.
+
