@@ -1,6 +1,6 @@
 function vanitygithub {
 	[[ $# != 2 ]] && {
-		echo "usage: vanitygithub <url> <code>"
+		echo "usage: vanitygithub <url> <code>"
 		return 1
 	}
 	http https://git.io url="$1" code="$2" -vf

@@ -17,7 +17,8 @@ function dotfiles {
    /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 }
 
-	git clone --bare git@github.com:BuonOmo/dotfiles.git $HOME/.dotfiles # If failing here, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+	git clone --bare git@github.com:BuonOmo/dotfiles.git $HOME/.dotfiles ||
+		die "⚠️ Please setup github with ssh and try again. https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
 
 	# Backing up
 	mkdir -p $HOME/.dotfiles.old
