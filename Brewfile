@@ -23,11 +23,12 @@ brew 'pgcli' # psql
 brew 'qrencode'
 brew 'ripgrep' # grep (`rg` in the command line, aliased with some customization)
 brew 'spark' # spark 1 2 3 4 => ▁▃▅█
+brew 'rename' # rename -s super_duper stack_loop
 brew 'sponge' # slurp all stdin before continuing (cat somefile | tr -d ' ' | sponge somefile)
 brew 'tealdeer' # Fast tldr
 brew 'terminal-notifier'
 brew 'tree'
-brew 'rename' # rename -s super_duper stack_loop
+brew 'visual-studio-code'
 brew 'youtube-dl'
 
 tap 'homebrew/cask-fonts'

@@ -1,0 +1,93 @@
+{
+	"editor.tabSize": 4,
+	"[markdown]": {
+		"editor.rulers": [80]
+	},
+	"editor.rulers": [80, 100, 120],
+	"[ruby]": {
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true
+	},
+	"[rust]": {
+		"editor.formatOnSave": true
+	},
+	"editor.detectIndentation": true,
+    "editor.fontFamily": "MonoLisa, JetBrains Mono, Menlo",
+    "editor.lineHeight": 0,
+	"editor.fontLigatures": "'calt' on, 'liga' on, 'ss02' on",
+    "editor.fontSize": 12,
+	"editor.insertSpaces": false,
+	"editor.minimap.maxColumn": 100,
+	"editor.tokenColorCustomizations": { // Use the command 'Dev: inspect tokens and scope'
+		"textMateRules": [
+			{ // Italic
+				"scope": [
+					"comment",
+					"keyword.control",
+					"constant",
+					"support.class.builtin.js", //String, Number, Boolean…, this, super
+					"storage.modifier", //static keyword
+					"storage.type.class.js", //class keyword
+					"storage.type.function.js", // function keyword
+					"storage.type.js", // Variable declarations
+					"keyword.other", // new
+				],
+				"settings": {
+					"fontStyle": "italic",
+				}
+			},
+			{ // Excluded from italic
+				"scope": [
+				],
+				"settings": {
+					"fontStyle": "",
+				}
+			}
+		]
+	},
+	"editor.trimAutoWhitespace": true,
+	"files.autoSave": "afterDelay",
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"files.trimTrailingWhitespace": true,
+	"gitlens.defaultTimeFormat": "hh:mm",
+	"search.useGlobalIgnoreFiles": true,
+	"security.workspace.trust.untrustedFiles": "open",
+	"terminal.integrated.defaultProfile.osx": "zsh",
+	"terminal.integrated.scrollback": 1000000,
+	"terminal.integrated.inheritEnv": false,
+	"workbench.colorCustomizations": { /* https://binaryify.github.io/OneDark-Pro/#/?id=tweaks-amp-theming */
+		"editorWhitespace.foreground": "#abb2bf55", /* changed for something more visible */
+	},
+	"workbench.colorTheme": "One Dark Pro Darker",
+	"workbench.editor.limit.enabled": true,
+	"workbench.editor.limit.perEditorGroup": true,
+	"workbench.editor.limit.value": 6,
+	"gitlens.advanced.messages": {
+		"suppressRebaseSwitchToTextWarning": true
+	},
+	"workbench.editorAssociations": {
+		"git-rebase-todo": "default"
+	},
+	"terminal.integrated.enablePersistentSessions": false,
+	"terminal.integrated.enableMultiLinePasteWarning": false,
+	"files.associations": {
+		".env": "shellscript",
+		".client_secrets.env": "shellscript",
+		"*.shared": "ruby"
+	},
+	"tabnine.experimentalAutoImports": true,
+	"codesnap.transparentBackground": true,
+	"codesnap.shutterAction": "copy",
+	"editor.minimap.enabled": false,
+	"github.copilot.enable": {
+		"*": true,
+		"yaml": false,
+		"plaintext": true,
+		"markdown": true
+	},
+	"editor.inlineSuggest.enabled": true,
+	"rust-analyzer.imports.merge.glob": false,
+	"rust-analyzer.imports.granularity.enforce": true,
+	"window.zoomLevel": -1,
+}

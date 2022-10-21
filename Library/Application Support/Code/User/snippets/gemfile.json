@@ -1,0 +1,13 @@
+{
+	"Magic comment": {
+		"prefix": "fsl",
+		"body": [
+			"# frozen_string_literal: true",
+			""
+		]
+	},
+	"Include": {
+		"prefix": "icl",
+		"body": "include ${1:Forwardable}"
+	}
+}
