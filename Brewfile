@@ -10,6 +10,7 @@ brew 'exa' # ls
 brew 'fd' # find
 brew 'ffmpeg'
 brew 'gifski' # high quality gifs
+brew 'git' # up-to-date git
 brew 'git-delta'
 brew 'help2man'
 brew 'hexyl' # hexdump
@@ -21,6 +22,7 @@ brew 'openssl'
 brew 'parallel'
 brew 'pgcli' # psql
 brew 'qrencode'
+brew 'rbenv'
 brew 'ripgrep' # grep (`rg` in the command line, aliased with some customization)
 brew 'spark' # spark 1 2 3 4 => ▁▃▅█
 brew 'rename' # rename -s super_duper stack_loop
@@ -28,8 +30,10 @@ brew 'sponge' # slurp all stdin before continuing (cat somefile | tr -d ' ' | sp
 brew 'tealdeer' # Fast tldr
 brew 'terminal-notifier'
 brew 'tree'
-brew 'visual-studio-code'
 brew 'youtube-dl'
+
+cask 'visual-studio-code'
+cask 'vlc'
 
 tap 'homebrew/cask-fonts'
 cask 'font-jetbrains-mono' # if you don't have https://monolisa.dev
