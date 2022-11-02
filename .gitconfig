@@ -60,3 +60,5 @@
 	templateDir = ~/.gitrc/template # 'fd git-core 2> /dev/null' to find the original template.
 [commit]
 	verbose = true
+[add "interactive"]
+	useBuiltin = false

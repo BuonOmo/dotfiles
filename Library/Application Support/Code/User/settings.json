@@ -12,7 +12,7 @@
 		"editor.formatOnSave": true
 	},
 	"editor.detectIndentation": true,
-    "editor.fontFamily": "MonoLisa, JetBrains Mono, Menlo",
+    "editor.fontFamily": "MonoLisa Custom, MonoLisa, JetBrains Mono, Menlo",
     "editor.lineHeight": 0,
 	"editor.fontLigatures": "'calt' on, 'liga' on, 'ss02' on",
     "editor.fontSize": 12,
@@ -89,5 +89,6 @@
 	"editor.inlineSuggest.enabled": true,
 	"rust-analyzer.imports.merge.glob": false,
 	"rust-analyzer.imports.granularity.enforce": true,
+	"explorer.confirmDelete": false,
 	"window.zoomLevel": -1,
 }

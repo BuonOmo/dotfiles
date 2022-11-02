@@ -8,5 +8,5 @@
 int main(int argc, char *argv[]) {
 	isatty(fileno(stdout)) && isatty(fileno(stderr)) &&
 		setenv("GIT_EXTERNAL_DIFF", "difft", 1);
-	execvp("/usr/bin/git", argv);
+	execvp("/opt/homebrew/bin/git", argv);
 }
