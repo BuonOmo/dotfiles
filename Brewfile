@@ -31,6 +31,7 @@ brew 'tealdeer' # Fast tldr
 brew 'terminal-notifier'
 brew 'tree'
 brew 'youtube-dl'
+brew 'fzf'
 
 cask 'visual-studio-code'
 cask 'vlc'
