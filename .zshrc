@@ -86,7 +86,7 @@ PATH="$ZSH_CUSTOM/bin:$PATH"
 
 source $ZSH_CUSTOM/aliases
 
-autoload -Uz compinit && compinit
+type brew &>/dev/null && fpath=( "$(brew --prefix)/share/zsh/site-functions" $fpath )
 
 # Ruby stuff
 
@@ -119,6 +119,10 @@ if [[ -d "$MY_ZSH_FPATH" ]]; then
     done
 fi
 unset MY_ZSH_FPATH
+
+# NOTE: this has to be done after $fpath is complete to be sure we don't leave
+#   any completion function.
+autoload -Uz compinit && compinit
 
 # Avoid loading node related stuff when not used (saves 0.5s at boot!)
 # Goodness from (and many other at) https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
