@@ -12,6 +12,12 @@ Update with:
 dotf pull
 ```
 
+Verify installation with:
+
+```zsh
+dotf doctor
+```
+
 Contribute with:
 
 ```zsh
