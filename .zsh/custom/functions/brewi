@@ -1,0 +1,37 @@
+# needs zsh, jq, fzf
+# Inspired by:
+# - https://github.com/raycast/extensions/tree/main/extensions/brew
+# - https://github.com/junegunn/fzf/wiki/examples#dnf
+brewi() {
+	brewi_fetch() {
+		local url="$1"
+		local cache_key="$2"
+		local cache_folder="$HOME/.brewi.cache"
+		local file="$cache_folder/$cache_key"
+		if [[ "$file"(Nm-14) != "$file" ]]; then
+			2>& echo "Older than 2 weeks, cache reloading..."
+			mkdir -p $cache_folder
+			curl -s "$url" > "$file"
+		fi
+		echo "$file"
+	}
+
+	local formula_file=$(brewi_fetch 'https://formulae.brew.sh/api/formula.json' 'formula')
+	local cask_file=$(brewi_fetch 'https://formulae.brew.sh/api/cask.json' 'cask')
+
+	{
+		jq --raw-output '.[] | .name' $formula_file
+		jq --raw-output '.[] | .token + " (cask)"' $cask_file
+	 } | sort | \
+		fzf --reverse \
+			--prompt="Brew Install " \
+			--bind="enter:execute(
+				if [[ '{2}' == '(cask)' ]]; then
+					brew install --cask {1}
+				else
+					brew install {1}
+				fi
+				echo $'\n\e[34mPress any key to continue...' && read -rsk 1)+first+clear-query" \
+			--preview='brew info {1} | bat --color=always --language=Markdown --style=plain' \
+			--preview-window='bottom,wrap,<13(right)'
+}

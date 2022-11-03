@@ -1,0 +1,24 @@
+# needs zsh, jq
+# Inspired by:
+# - https://github.com/raycast/extensions/tree/main/extensions/brew
+# - https://github.com/junegunn/fzf/wiki/examples#dnf
+brewr() {
+	brew info --json=v2 --installed |
+		jq --raw-output '
+			(.formulae[] | .name),
+			(.casks[] | .token + " (cask)")
+		' | \
+		sort | \
+		fzf --reverse \
+			--prompt="Brew Remove " \
+			--bind="enter:execute(
+				if [[ '{2}' == '(cask)' ]]; then
+					brew uninstall --cask {1}
+				else
+					brew uninstall {1}
+				fi
+				echo $'\n\e[34mPress any key to continue...' && read -rsk 1 && printf '\n'
+			)+first+clear-query" \
+			--preview='brew info {1} | bat --color=always --language=Markdown --style=plain' \
+			--preview-window='bottom,wrap,<13(right)'
+}
