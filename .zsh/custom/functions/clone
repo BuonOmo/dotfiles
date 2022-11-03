@@ -1,6 +1,10 @@
+# Clones and cd into a repo. you can just copy the url you are browsing, or
+# call `clone [<git clone args>] org/repo`
 function clone {
-	local all user repo
+	local all user repo folder gh_args
 
+	gh_args="${@:1:-1}"
+	shift $(( $# - 1 ))
 	all="$1"
 	all="${all#'https://github.com/'}" # https
 	all="${all#'git@github.com:'}" # ssh
@@ -8,8 +12,8 @@ function clone {
 
 	IFS='/' read -r user repo <<< "$all"
 
-	cd ~/Dev
-	take "$user"
-	git clone "git@github.com:$user/$repo.git"
-	cd "$repo"
+	folder="$HOME/Dev/$user/$repo"
+	mkdir -p "$folder"
+	git clone $gh_args "git@github.com:$user/$repo.git" "$folder" || return $?
+	cd "$folder"
 }
