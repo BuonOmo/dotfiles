@@ -147,8 +147,22 @@ emcc() {
 # And autojump
 j() {
 	unfunction j
-	# 'brew info autojump' if the next line fails.
-	[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+	local autojump_path=/opt/homebrew/etc/profile.d/autojump.sh
+	if [ -f "$autojump_path" ]; then
+		source "$autojump_path"
+	else # try self correction
+		local correct_path=$(brew info autojump | grep --after 1 zshrc | tail -1 | awk '{print $3}')
+		if [ -f "$correct_path" ]; then
+			rg --passthru --no-line-number \
+				'(local autojump_path=).*\.sh$' --replace '${1}'"$correct_path" \
+				$HOME/.zshrc | sponge $HOME/.zshrc
+		else
+			>&2 echo 'failed to load autojump, see `brew info autojump` and' \
+				'edit your ~/.zshrc accordingly.'
+			return 1
+		fi
+		return 1
+	fi
 	j "$@"
 }
 
