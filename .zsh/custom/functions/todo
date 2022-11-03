@@ -14,3 +14,11 @@ function todo {
 	esac
 }
 unset '_comps[todo]'
+# We need to execute the function because the content of this file is not only
+# a function. The default behaviour of autoload is:
+#
+# 1. If there is only a function body, load and execute the function.
+# 2. If there are other commands, load and consider the function initialized.
+#
+# See 'AUTOLOADING FUNCTIONS' in man zshall
+todo "$@"
