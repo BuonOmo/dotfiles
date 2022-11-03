@@ -1,1 +1,2 @@
+#compdef rgc
 compdef _rg rgc
