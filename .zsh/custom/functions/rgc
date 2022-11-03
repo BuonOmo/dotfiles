@@ -1,6 +1,9 @@
 rgc() {
 	rg --color=always --line-number "$@" |
-		fzf --ansi --delimiter=: --preview='bat --color always {1} --highlight-line {2}' --preview-window='~3,+{2}+3/4' |
+		fzf --ansi --delimiter=: \
+			--preview='bat --color=always {1} --highlight-line={2}' \
+			--preview-window='~3,+{2}+3/4' |
 		cut -f1-2 -d: |
-		xargs -I{} code -g {}
+		xargs code -g
 }
+# See _rgc for completion
