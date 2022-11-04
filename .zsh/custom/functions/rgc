@@ -1,8 +1,8 @@
 rgc() {
 	rg --color=always --line-number "$@" |
-		fzf --ansi --delimiter=: \
-			--preview='bat --color=always {1} --highlight-line={2}' \
-			--preview-window='~3,+{2}+3/4' |
+		fzf --ansi --delimiter=: --layout=reverse --info=inline \
+			--preview='bat --color=always {1} --highlight-line={2} --style=plain' \
+			--preview-window='+{2}/2,border-left' |
 		cut -f1-2 -d: |
 		xargs code -g
 }

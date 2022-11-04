@@ -13,7 +13,6 @@ function todo {
 		*) sed -I '' "/#$1/d" ~/.todo ;;
 	esac
 }
-unset '_comps[todo]'
 # We need to execute the function because the content of this file is not only
 # a function. The default behaviour of autoload is:
 #

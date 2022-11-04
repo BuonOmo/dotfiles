@@ -8,6 +8,52 @@ dotf() {
 	__dotf_hook() {
 		echo "(dotfile mode)"
 	}
+
+	dotf_doctor() {
+		local dotf_status=0
+		check() {
+			local curr_status="$?"
+			if (( curr_status == 0 )); then
+				echo "✅  $1"
+			else
+				echo "❌  $1\n"
+				bat --style=plain --paging=never --language=markdown --color=always | sed 's/^/      /'
+				echo
+				dotf_status=$curr_status
+			fi
+		}
+
+		[[ "$(launchctl list | grep ulysse | awk '{ print $1 }')" =~ "[0-9]+" ]]
+		check 'Witchcraft server' <<-CURE
+			Verify that you plist file is OK. There may also be some logs.
+
+			    fd com.ulysse.witchcraft ~/Library
+
+			You might need to restart your computer as well, or just restart the
+			service.
+
+			    launchctl stop com.ulysse.witchcraft
+			    launchctl load ~/Library/LaunchAgents/com.ulysse.witchcraft.plist
+			    launchctl start com.ulysse.witchcraft
+		CURE
+
+		fc-list | grep -iq '\bmonolisa\b'
+		check 'MonoLisa font' <<-CURE
+			Download the font at https://www.monolisa.dev/orders and install it.
+			Tools installed with these dotfiles will prioritize _MonoLisa Custom_
+			over _MonoLisa_, hence feel free to customize.
+		CURE
+
+		! (( ${+_comps[todo]} ))
+		check 'No default zsh completion for `todo`' <<-CURE
+			Remove the default todo completion.
+
+			    fd \$_comps[todo] / --exec rm -i
+		CURE
+
+		return $dotf_status
+	}
+
 	local unaliased="$aliases[$1]"
 	if (( $# == 0 )); then # Env mode
 		if [[ "$aliases[git]" = "dotf" ]]; then
@@ -19,28 +65,12 @@ dotf() {
 			alias git=dotf
 		fi
 	elif [[ "$1" = "doctor" ]]; then
-		local dotf_status=0
-		__dotf_assert() {
-			local curr_status="$?"
-			if (( curr_status == 0 )); then
-				printf "✅  "
-			else
-				printf "❌  "
-				dotf_status=$curr_status
-			fi
-			echo "$1"
-		}
-
-		[[ "$(launchctl list | grep ulysse | awk '{ print $1 }')" =~ "[0-9]+" ]]
-		__dotf_assert "Witchcraft server"
-
-		fc-list | grep -iq '\bmonolisa\b'
-		__dotf_assert 'MonoLisa font (https://monolisa.dev)'
-
-		return $dotf_status
+		dotf_doctor
 	elif [[ "$unaliased" = "git "* ]]; then # Alias resolving
 		eval "${unaliased/git/dotf} ${@:2}"
 	else # Default
 		git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 	fi
 }
+
+dotf "$@"
