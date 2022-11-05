@@ -98,10 +98,6 @@ export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 # Source: https://github.com/junegunn/fzf/wiki/examples#man-pages
 export MANPAGER="sh -c 'col -bx | bat -l man -p --paging always'"
 
-# Unset completion for todo, because it defaults to a MacOS file that cannot be
-# removed (OSX 12.5 Monterey)
-unset '_comps[todo]'
-
 # Lazy load ruby/rbenv related stuff (see npm below for a more canonical example).
 if [[ -d "$HOME/.rbenv" ]]; then
 	shims=($HOME/.rbenv/shims/* rbenv)
@@ -131,6 +127,10 @@ unset MY_ZSH_FPATH
 # NOTE: this has to be done after $fpath is complete to be sure we don't leave
 #   any completion function.
 autoload -Uz compinit && compinit
+
+# Unset completion for todo, because it defaults to a MacOS file that cannot be
+# removed (OSX 12.5 Monterey)
+unset '_comps[todo]'
 
 # Avoid loading node related stuff when not used (saves 0.5s at boot!)
 # Goodness from (and many other at) https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m

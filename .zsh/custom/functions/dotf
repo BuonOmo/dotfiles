@@ -29,6 +29,11 @@ dotf() {
 
 			    fd com.ulysse.witchcraft ~/Library
 
+			Some variables may not have been correctly installed at start-up. If
+			so you can re-run the installation script:
+
+			    curl -fsSL https://raw.githubusercontent.com/BuonOmo/dotfiles/main/install/witchcraft.zsh | zsh
+
 			You might need to restart your computer as well, or just restart the
 			service.
 
@@ -49,6 +54,10 @@ dotf() {
 			Remove the default todo completion.
 
 			    fd \$_comps[todo] / --exec rm -i
+
+			This might not be possible, in which case, unset the completion
+
+			    unset '_comps[todo]'
 		CURE
 
 		return $dotf_status
