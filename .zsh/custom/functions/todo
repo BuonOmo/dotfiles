@@ -6,6 +6,13 @@ function todo {
 	case "$@" in
 		-e|--edit|edit) $EDITOR ~/.todo ;;
 		-c|--clear|clear) sed -I '' -n 1p ~/.todo ;;
+		-p|--pick|pick)
+			local line=$(cat ~/.todo | tac | fzf --ansi)
+			[[ -z "$line" ]] || {
+				sed -I '' "/$(echo $line | rg --only-matching '#\d+')/d" ~/.todo
+				echo $line
+			}
+			;;
 		''|*[!0-9]*)
 			echo "- $@ $(tput bold)#$id$(tput sgr0)" >> ~/.todo
 		    echo "#$id"
