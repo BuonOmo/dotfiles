@@ -3,26 +3,19 @@
 # - https://github.com/raycast/extensions/tree/main/extensions/brew
 # - https://github.com/junegunn/fzf/wiki/examples#dnf
 brewi() {
-	brewi_fetch() {
-		local url="$1"
-		local cache_key="$2"
-		local cache_folder="$HOME/.brewi.cache"
-		local file="$cache_folder/$cache_key"
-		if [[ "$file"(Nm-14) != "$file" ]]; then
-			2>& echo "Older than 2 weeks, cache reloading..."
-			mkdir -p $cache_folder
-			curl -s "$url" > "$file"
-		fi
-		echo "$file"
-	}
+	# HACK: this file is needed because fzf has a hard time parsing +
+	local jqcmd=$(mktemp)
+	local wait_click="echo $'\n\e[34mPress any key to continue...' && read -rsk 1"
 
-	local formula_file=$(brewi_fetch 'https://formulae.brew.sh/api/formula.json' 'formula')
-	local cask_file=$(brewi_fetch 'https://formulae.brew.sh/api/cask.json' 'cask')
+	cat <<-JQ > $jqcmd
+		(
+			(. | map(.cask_tokens) | flatten | map(split("/")[-1] + " (cask)"))
+			+
+			(. | map(.formula_names) | flatten)
+		)[]
+	JQ
 
-	{
-		jq --raw-output '.[] | .name' $formula_file
-		jq --raw-output '.[] | .token + " (cask)"' $cask_file
-	 } | sort | \
+	brew tap-info --json --installed | jq --raw-output --from-file $jqcmd | sort | \
 		fzf --reverse \
 			--prompt="Brew Install " \
 			--bind="enter:execute(
@@ -31,7 +24,13 @@ brewi() {
 				else
 					brew install {1}
 				fi
-				echo $'\n\e[34mPress any key to continue...' && read -rsk 1)+first+clear-query" \
+				$wait_click)+first+clear-query" \
+			--bind='ctrl-t:preview(
+				bat --color=always $(brew edit --print-path {1})
+			)' \
+			--bind="ctrl-r:execute(brew update;$wait_click)+reload(
+				brew tap-info --json --installed | jq --raw-output --from-file $jqcmd | sort
+			)" \
 			--preview='brew info {1} | bat --color=always --language=Markdown --style=plain' \
 			--preview-window='bottom,wrap,<13(right)'
 }
