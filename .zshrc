@@ -81,12 +81,14 @@ ZSH_AUTOSUGGEST_USE_ASYNC=letsgobb
 
 source $ZSH/oh-my-zsh.sh
 
-PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+(( ${+HOMEBREW_PREFIX} )) || { >&2 echo "HOMEBREW_PREFIX not defined. Abort loading ~/.zshrc"  && return 1 }
+
+PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
 PATH="$ZSH_CUSTOM/bin:$PATH"
 
 source $ZSH_CUSTOM/aliases
 
-type brew &>/dev/null && fpath=( "$(brew --prefix)/share/zsh/site-functions" $fpath )
+type brew &>/dev/null && fpath=( "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath )
 
 # Ruby stuff
 
@@ -155,14 +157,14 @@ emcc() {
 # And autojump
 j() {
 	unfunction j
-	local autojump_path=/opt/homebrew/etc/profile.d/autojump.sh
+	local autojump_path="$HOMEBREW_PREFIX/etc/profile.d/autojump.sh"
 	if [ -f "$autojump_path" ]; then
 		source "$autojump_path"
 	else # try self correction
 		local correct_path=$(brew info autojump | grep --after 1 zshrc | tail -1 | awk '{print $3}')
 		if [ -f "$correct_path" ]; then
 			rg --passthru --no-line-number \
-				'(local autojump_path=).*\.sh$' --replace '${1}'"$correct_path" \
+				'(local autojump_path=).*\.sh"$' --replace '${1}'"$correct_path" \
 				$HOME/.zshrc | sponge $HOME/.zshrc
 		else
 			>&2 echo 'failed to load autojump, see `brew info autojump` and' \
@@ -175,4 +177,5 @@ j() {
 }
 
 alias timezsh='for i in $(seq 1 10); do time zsh -lic exit; done'
+alias profzsh='USE_ZPROF=1 zsh -lic exit | bat --language=elm --plain'
 ((USE_ZPROF == 1)) && zprof || true # Must always be at the end!

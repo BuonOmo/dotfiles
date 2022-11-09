@@ -18,6 +18,7 @@ brew 'httpie' # curl
 brew 'hyperfine'
 brew 'jq' # json utility, use jj if you need to go faster
 #NOT brew 'ngrok', but http://localhost.run/
+brew 'ncdu' # du with a graphical interface
 brew 'openssl'
 brew 'parallel'
 brew 'pgcli' # psql

@@ -60,6 +60,9 @@ dotf() {
 			    unset '_comps[todo]'
 		CURE
 
+		[[ "$(which sleep)" = "$(which gsleep)" ]]
+		check 'Gnu coreutils correctly installed' < <(brew info coreutils)
+
 		return $dotf_status
 	}
 
