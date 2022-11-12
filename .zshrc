@@ -130,10 +130,6 @@ unset MY_ZSH_FPATH
 #   any completion function.
 autoload -Uz compinit && compinit
 
-# Unset completion for todo, because it defaults to a MacOS file that cannot be
-# removed (OSX 12.5 Monterey)
-unset '_comps[todo]'
-
 # Avoid loading node related stuff when not used (saves 0.5s at boot!)
 # Goodness from (and many other at) https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
 __load_node() {

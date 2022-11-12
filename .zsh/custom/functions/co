@@ -4,5 +4,3 @@ co() (
 
 	code --reuse-window .
 )
-
-compdef _j co

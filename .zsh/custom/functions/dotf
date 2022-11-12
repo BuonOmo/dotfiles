@@ -53,14 +53,17 @@ dotf() {
 		check 'No default zsh completion for `todo`' <<-CURE
 			Remove the default todo completion.
 
-			    fd \$_comps[todo] / --exec rm -i
-
-			This might not be possible, in which case, unset the completion
-
-			    unset '_comps[todo]'
+			    fd \$_comps[todo] /opt --no-ignore --hidden
 		CURE
 
-		[[ "$(which sleep)" = "$(which gsleep)" ]]
+		[[ "$_comps[co]" == "_co" ]]
+		check 'No default zsh completion for `co`' <<-CURE
+			Remove the default co completion.
+
+			    fd \$_comps[co] /opt --no-ignore --hidden --exec rm -i
+		CURE
+
+		[[ "$(which sleep)" =~ "coreutils" ]]
 		check 'Gnu coreutils correctly installed' < <(brew info coreutils)
 
 		return $dotf_status

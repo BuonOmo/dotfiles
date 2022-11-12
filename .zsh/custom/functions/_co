@@ -1,0 +1,10 @@
+#compdef co
+
+local autojump_path="$HOMEBREW_PREFIX/etc/profile.d/autojump.sh"
+[ -f "$autojump_path" ] && source "$autojump_path"
+
+_co() {
+	_j "$@"
+}
+
+_co "$@"

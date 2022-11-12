@@ -6,9 +6,11 @@ brew 'coreutils' # GNU coreutils such as date, sed... (set as default in dotfile
 brew 'diff-so-fancy' # diff (set for git)
 brew 'difftastic' # diff (not just fancy but smart)
 brew 'duf' # df
+brew 'dust' # du
 brew 'exa' # ls
 brew 'fd' # find
 brew 'ffmpeg'
+brew 'fzf'
 brew 'gifski' # high quality gifs
 brew 'git' # up-to-date git
 brew 'git-delta'
@@ -32,7 +34,7 @@ brew 'tealdeer' # Fast tldr
 brew 'terminal-notifier'
 brew 'tree'
 brew 'youtube-dl'
-brew 'fzf'
+brew 'zsh' # Allows manipulating the zsh installation.
 
 cask 'visual-studio-code'
 cask 'vlc'
