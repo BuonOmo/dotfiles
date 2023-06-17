@@ -172,6 +172,8 @@ j() {
 	j "$@"
 }
 
+eval "$(direnv hook zsh)"
+
 alias timezsh='for i in $(seq 1 10); do time zsh -lic exit; done'
 alias profzsh='USE_ZPROF=1 zsh -lic exit | bat --language=elm --plain'
 ((USE_ZPROF == 1)) && zprof || true # Must always be at the end!

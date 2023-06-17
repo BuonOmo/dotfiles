@@ -5,6 +5,7 @@ brew 'cloc' # count lines of code
 brew 'coreutils' # GNU coreutils such as date, sed... (set as default in dotfiles)
 brew 'diff-so-fancy' # diff (set for git)
 brew 'difftastic' # diff (not just fancy but smart)
+brew 'direnv' # loads .envrc file of the current directory
 brew 'duf' # df
 brew 'dust' # du
 brew 'exa' # ls
