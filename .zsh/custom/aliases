@@ -12,6 +12,9 @@ alias cz='code ~/.zshrc'
 alias ip='curl https://ipinfo.io/ip'
 alias whereami='curl https://ipinfo.io | jq --raw-output .loc'
 
+alias ls=exa
+alias l='exa --long --all --header --git'
+
 alias rg='rg --no-heading'
 alias rgi='rg -i'
 
