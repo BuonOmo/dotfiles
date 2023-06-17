@@ -1,0 +1,9 @@
+note() {
+	if (( $# < 1 )); then
+		cd ~/Notes
+	else
+		for file in $@; do
+			code ~/Notes/"$file"
+		done
+	fi
+}
