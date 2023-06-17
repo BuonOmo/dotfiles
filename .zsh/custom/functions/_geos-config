@@ -1,0 +1,3 @@
+#compdef geos-config
+
+compadd -- $(geos-config 2>&1 | grep --extended-regexp --only-matching '\-\-[a-z-]+')

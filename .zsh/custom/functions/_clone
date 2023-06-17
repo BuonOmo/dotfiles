@@ -1,0 +1,4 @@
+#compdef clone
+
+compdef _git clone
+# TODO: make that work with freaking git (would be good for dotf as well)
