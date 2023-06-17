@@ -34,7 +34,7 @@ brew 'sponge' # slurp all stdin before continuing (cat somefile | tr -d ' ' | sp
 brew 'tealdeer' # Fast tldr
 brew 'terminal-notifier'
 brew 'tree'
-brew 'youtube-dl'
+brew 'yt-dlp'
 brew 'zsh' # Allows manipulating the zsh installation.
 
 cask 'visual-studio-code'
