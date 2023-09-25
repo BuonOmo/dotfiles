@@ -1,0 +1,3 @@
+#compdef cdgem
+
+compadd -- $(bundle show | tail -n +2 | cut -d' ' -f4)
