@@ -92,7 +92,7 @@ type brew &>/dev/null && fpath=( "$HOMEBREW_PREFIX/share/zsh/site-functions" $fp
 
 # Ruby stuff
 
-export RUBYOPT="-r$HOME/.ruby/debug.rb"
+export RUBYOPT="-r$HOME/.ruby/debug.rb -I$HOME/Dev/misc"
 
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 

@@ -21,10 +21,12 @@ Array.include EnumFork
 Enumerable.include EnumFork
 
 module Debug
+  module_function
+
   def say(*args, **kwargs)
     puts ?v * 120
     puts Internal.caller_loc
-    p(*args, **kwargs)
+    pp(*args, **kwargs)
     puts ?^ * 120
     puts
   end
@@ -101,6 +103,51 @@ class String
     end.join("") + ?"
   end
 end
+
+module MethodExt
+  def sl
+    source_location * ":"
+  end
+
+  def goto
+    editor = ENV.fetch("EDITOR", "zed")
+    case editor
+    when "zed" then system("zed", sl)
+    when "code" then system("code", "-g", sl)
+    else
+      system(editor, sl)
+    end
+  end
+end
+Method.prepend MethodExt
+UnboundMethod.prepend MethodExt
+
+class Module
+  def csl(...)
+    const_source_location(...) * ":"
+  end
+
+  def const_goto(...)
+    editor = ENV.fetch("EDITOR", "zed")
+    case editor
+    when "zed" then system("zed", csl(...))
+    when "code" then system("code", "-g", csl(...))
+    else
+      system(editor, csl(...))
+    end
+  end
+end
+
+module ObjectExt
+  # Allow looking in a range of ancestors.
+  def methods(regular=true)
+    return super unless regular.is_a?(Numeric)
+
+    super(true) - self.class.ancestors[regular..].flat_map(&:instance_methods)
+  end
+end
+
+Object.prepend(ObjectExt)
 
 def dbg
   Kernel.include Debug
