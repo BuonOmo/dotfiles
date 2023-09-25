@@ -1,9 +1,15 @@
 note() {
+	for	_ in $NOTES_FOLDER/.lastpush(mw+2N); do
+		cd $NOTES_FOLDER
+		echo "Pushing notes to git"
+		git add . && git commit && git push && touch .lastpush
+		cd -
+	done
 	if (( $# < 1 )); then
-		cd ~/Notes
+		cd $NOTES_FOLDER
 	else
 		for file in $@; do
-			$EDITOR ~/Notes/"$file"
+			$EDITOR $NOTES_FOLDER/"$file"
 		done
 	fi
 }
