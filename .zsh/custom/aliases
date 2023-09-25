@@ -4,6 +4,14 @@
 
 # New aliases
 
+alias t='todo.sh -t'
+alias todo=t
+alias ta='t add'
+alias tl='t list'
+alias td='t done'
+alias tp='t pri'
+alias tn='t note'
+
 alias edit='$EDITOR'
 alias editaliases='$EDITOR --wait $ZSH_CUSTOM/aliases && source $ZSH_CUSTOM/aliases'
 
@@ -67,6 +75,8 @@ bindkey -s '^g' 'git status --short --branch^M'
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
+
+export NOTES_FOLDER="$HOME/Notes"
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then

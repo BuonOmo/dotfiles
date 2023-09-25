@@ -33,6 +33,7 @@ brew 'rename' # rename -s super_duper stack_loop
 brew 'sponge' # slurp all stdin before continuing (cat somefile | tr -d ' ' | sponge somefile)
 brew 'tealdeer' # Fast tldr
 brew 'terminal-notifier'
+brew 'todo-txt'
 brew 'tree'
 brew 'yt-dlp'
 brew 'zsh' # Allows manipulating the zsh installation.

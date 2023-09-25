@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Show usage if first argument is usage
+if [ "$1" = "usage" ]; then
+	echo -e "    note ITEM#"
+	echo -e "      Open note for ITEM#."
+	exit 0
+fi
+
+if [ -z "$NOTES_FOLDER" ]; then
+	echo "NOTES_FOLDER is not set"
+	exit 1
+fi
+
+shift # Remove action argument
+note=$(todo.sh ls 'note:' | grep "$1" | rg -o 'note:([^ ]+)' -r '$1')
+
+if [ -z "$note" ]; then
+	echo "No note found for item $1"
+	exit 1
+fi
+
+$EDITOR "$NOTES_FOLDER/$note.md"
