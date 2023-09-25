@@ -14,6 +14,8 @@ function clone {
 
 	folder="$HOME/Dev/$user/$repo"
 	mkdir -p "$folder"
-	git clone $gh_args "git@github.com:$user/$repo.git" "$folder" || return $?
+	git clone $gh_args "git@github.com:$user/$repo.git" "$folder" \
+		|| git clone $gh_args "https://github.com/$user/$repo" "$folder" \
+		|| return $?
 	cd "$folder"
 }
