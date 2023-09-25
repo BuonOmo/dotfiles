@@ -85,11 +85,21 @@ require_relative ".ruby/debug.rb"
 # end
 
 module IrBang
-  def evaluate(context, statements, file = __FILE__, line = __LINE__)
-    if statements.start_with?(".")
-      system statements[1..-1]
-    else
-      super
+  if IRB::WorkSpace.instance_method(:evaluate).arity == -3
+    def evaluate(context, statements, file = __FILE__, line = __LINE__)
+      if statements.start_with?(".")
+        system statements[1..-1]
+      else
+        super
+      end
+    end
+  else
+    def evaluate(statements, file = __FILE__, line = __LINE__)
+      if statements.start_with?(".")
+        system statements[1..-1]
+      else
+        super
+      end
     end
   end
 end
