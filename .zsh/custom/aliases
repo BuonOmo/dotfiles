@@ -2,6 +2,11 @@
 
 # TODO: take advantage of 'alias -g' (see dotfiles-old repo)
 
+# New aliases
+
+alias edit='$EDITOR'
+alias editaliases='$EDITOR --wait $ZSH_CUSTOM/aliases && source $ZSH_CUSTOM/aliases'
+
 # Misc aliases
 
 alias clearall='tput reset' # Or many other solutions (https://stackoverflow.com/q/5367068/6320039)
@@ -67,7 +72,7 @@ bindkey -s '^g' 'git status --short --branch^M'
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  export EDITOR='code'
+  export EDITOR='zed'
 fi
 
 # https://www.zsh.org/mla/users/2013/msg00691.html

@@ -1,9 +1,13 @@
 rgc() {
+	local extra_args=""
+	if [[ "$EDITOR" = "code" ]]; then
+		extra_args="--goto"
+	fi
 	rg --color=always --line-number "$@" 2> /dev/null |
 		fzf --ansi --delimiter=: --layout=reverse --info=inline \
 			--preview='bat --color=always {1} --highlight-line={2} --style=plain' \
 			--preview-window='+{2}/2,border-left' |
 		cut -f1-2 -d: |
-		xargs code -g
+		xargs $EDITOR $extra_args
 }
 # See _rgc for completion

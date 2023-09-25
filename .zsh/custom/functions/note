@@ -3,7 +3,7 @@ note() {
 		cd ~/Notes
 	else
 		for file in $@; do
-			code ~/Notes/"$file"
+			$EDITOR ~/Notes/"$file"
 		done
 	fi
 }
