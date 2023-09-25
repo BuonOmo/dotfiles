@@ -1,7 +1,7 @@
 # See also https://silverhammermba.github.io/emberb/embed/
 ruby-gcc-flags() {
-	[[ "$(rbenv local)" = "system" ]] && echo "$0: no config for system version" 1>&2 && return 1
+	[[ "$(rbenv version-name)" = "system" ]] && echo "$0: no config for system version" 1>&2 && return 1
 
 	PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(rbenv prefix)/lib/pkgconfig" \
-		pkg-config --cflags --libs ruby-$(rbenv local | cut -d. -f1-2)
+		pkg-config --cflags --libs ruby-$(rbenv version-name | cut -d. -f1-2)
 }
