@@ -71,6 +71,7 @@ HIST_STAMPS="yyyy-mm-dd" # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd" or 'man strfti
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
 	git
+	gitfast
 	rust
 	zsh-command-time
 	zsh-completions
