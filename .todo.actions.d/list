@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+[ "$1" = "usage" ] && exit 0
+
+todo.sh command $* | tac
