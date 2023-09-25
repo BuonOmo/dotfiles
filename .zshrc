@@ -173,6 +173,12 @@ j() {
 	j "$@"
 }
 
+# https://wiki-dev.bash-hackers.org/scripting/debuggingtips
+# If website not accessible, try adding `83.243.40.67 wiki.bash-hackers.org`
+# to /etc/hosts.
+export PS4='+(${BASH_SOURCE:-}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+
 eval "$(direnv hook zsh)"
 
 alias timezsh='for i in $(seq 1 10); do time zsh -lic exit; done'
