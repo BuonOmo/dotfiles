@@ -104,6 +104,8 @@ class String
   end
 end
 
+## Better source location access, and a `goto` family of methods to open editor.
+
 module MethodExt
   def sl
     source_location * ":"
@@ -123,17 +125,17 @@ Method.prepend MethodExt
 UnboundMethod.prepend MethodExt
 
 class Module
-  def csl(...)
-    const_source_location(...) * ":"
+  def csl
+    Object.const_source_location(self.name) * ":"
   end
 
-  def const_goto(...)
+  def const_goto
     editor = ENV.fetch("EDITOR", "zed")
     case editor
-    when "zed" then system("zed", csl(...))
-    when "code" then system("code", "-g", csl(...))
+    when "zed" then system("zed", csl)
+    when "code" then system("code", "-g", csl)
     else
-      system(editor, csl(...))
+      system(editor, csl)
     end
   end
 end
