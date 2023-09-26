@@ -140,6 +140,8 @@ class Module
   end
 end
 
+## `#methods` with a numeric argument to look in a range of ancestors.
+
 module ObjectExt
   # Allow looking in a range of ancestors.
   def methods(regular=true)
@@ -150,6 +152,33 @@ module ObjectExt
 end
 
 Object.prepend(ObjectExt)
+
+## Disable a `binding.irb` breakpoint with `#disable`
+
+require 'irb'
+
+IRB.singleton_class.attr_accessor(:bindings_disabled)
+IRB.bindings_disabled = {}
+
+module IRB
+	module ExtendCommandBundle
+		def irb_disable
+			IRB.bindings_disabled[irb_context.workspace.binding.source_location] = true
+		end
+		@ALIASES.push([:disable, :irb_disable, NO_OVERRIDE])
+	end
+end
+
+module BindingExt
+	def irb
+		return if IRB.bindings_disabled[source_location]
+		super
+	end
+end
+
+Binding.prepend(BindingExt)
+
+## Include debugging tools in the top-level namespace
 
 def dbg
   Kernel.include Debug
