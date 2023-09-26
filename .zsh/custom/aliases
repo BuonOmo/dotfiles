@@ -5,12 +5,14 @@
 # New aliases
 
 alias t='todo.sh -t'
-alias todo=t
 alias ta='t add'
-alias tl='t list'
 alias td='t done'
-alias tp='t pri'
+alias te='t edit'
+alias tl='t list'
 alias tn='t note'
+alias tp='t pri'
+
+alias todo=tl
 
 alias edit='$EDITOR'
 alias editaliases='$EDITOR --wait $ZSH_CUSTOM/aliases && source $ZSH_CUSTOM/aliases'

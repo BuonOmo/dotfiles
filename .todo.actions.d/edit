@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+$EDITOR $NOTES_FOLDER/todo/todo.txt
