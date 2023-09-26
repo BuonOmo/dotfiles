@@ -23,7 +23,10 @@ esac%"
 
 readonly state="cat $tmp_file"
 
-readonly nextstate="execute-silent%case \$(cat $tmp_file) in install) echo rm > $tmp_file ;; *) echo install > $tmp_file ;; esac%"
+readonly nextstate="execute-silent%case \$(cat $tmp_file) in
+	install) echo rm > $tmp_file ;;
+	*) echo install > $tmp_file ;;
+esac%"
 
 readonly bold="\e[1m"
 readonly reset="\e[0m"
