@@ -8,7 +8,7 @@ brew 'difftastic' # diff (not just fancy but smart)
 brew 'direnv' # loads .envrc file of the current directory
 brew 'duf' # df
 brew 'dust' # du
-brew 'exa' # ls
+brew 'eza' # ls
 brew 'fd' # find
 brew 'ffmpeg'
 brew 'fzf'
