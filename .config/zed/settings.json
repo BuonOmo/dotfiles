@@ -8,10 +8,23 @@
 // from the command palette or from `Zed` application menu.
 {
   "theme": "Atelier Forest Dark",
-  "buffer_font_size": 15,
+  "buffer_font_size": 14,
+  "buffer_font_family": "MonoLisa Custom",
+  "buffer_font_features": {
+    "calt": true,
+    "ss01": true
+  },
   "format_on_save": "on",
   "hard_tabs": true,
   "autosave": "on_focus_change",
   "ensure_final_newline_on_save": true,
-  "remove_trailing_whitespace_on_save": true
+  "remove_trailing_whitespace_on_save": true,
+  "terminal": {
+    "copy_on_select": true
+  },
+  "language_overrides": {
+    "Markdown": {
+      "soft_wrap": "none"
+    }
+  }
 }

@@ -158,7 +158,7 @@ Object.prepend(ObjectExt)
 require 'irb'
 
 IRB.singleton_class.attr_accessor(:bindings_disabled)
-IRB.bindings_disabled = {}
+IRB.send(:bindings_disabled=, {})
 
 module IRB
 	module ExtendCommandBundle

@@ -25,6 +25,7 @@
 	use-ssh = "!for remote in $(git remote); do git remote set-url $remote $(git remote get-url $remote | sed -E 's,https://github\\.com/,git@github.com:,'); done"
 	use-http = "!for remote in $(git remote); do git remote set-url $remote $(git remote get-url $remote | sed -E 's,git@github\\.com:,https://github.com/,'); done"
 	change-protocol = "!bash -c \"if [[ $(git remote get-url origin) == https* ]]; then git use-ssh; else git use-http; fi\""
+	switch-protocol = change-protocol
 [diff]
 	tool = vscode
 [difftool "vscode"]
@@ -43,10 +44,10 @@
 [color]
 	ui = true
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+	oldNormal = brightred bold
+	oldHighlight = brightred bold 52
+	newNormal = brightgreen bold
+	newHighlight = brightgreen bold 22
 [color "diff"]
 	meta = 11
 	frag = magenta bold
