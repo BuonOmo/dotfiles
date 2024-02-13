@@ -6,7 +6,7 @@
 # You can use bash if you prefere it over zsh, and ag
 # over rg.
 
-/usr/bin/env rg --no-heading --colors 'match:bg:yellow' '\u{202f}' $(git ls-files) || exit 0
+/usr/bin/env rg -0 --no-heading --colors 'match:bg:yellow' '\u{202f}' "$(git ls-files -z)" || exit 0
 
 cat << TEXT
 ⚠️  There is a non breaking space in your code, see notice above.
