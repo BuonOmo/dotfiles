@@ -6,62 +6,63 @@
 #
 # Install: place this file on an fpath directory (e.g. ~/.zsh/completions/_launchctl),
 # run `autoload -Uz _launchctl` and `compinit` (or restart the shell).
+#
+# Debug: unfunction _launchctl && autoload -U _launchctl
 
 # TODO: missing reboot command
+# TODO: remove all the superfluous 'return' calls
 
+# Subcommands taken from `launchctl help`
 local -a subcommands
 subcommands=(
-  "asuser:asuser UID command [args]"
-  "attach:attach [-ksx] service-target"
-  "blame:blame service-target"
-  "bootout:bootout domain-target [service-path ...] | service-target"
-  "bootstrap:bootstrap domain-target [service-path ...] | service-target"
-  "bsexec:bsexec PID command [args]"
-  "config:config system|user parameter value"
-  "debug:debug service-target [--program <program path>] [flags]"
-  "disable:disable service-target"
-  "enable:enable service-target"
-  "error:error [posix|mach|bootstrap] code"
-  "examine:examine [tool arg0 arg1 @PID ...]"
-  "getenv:getenv key"
-  "help:help <subcommand>"
-  "hostinfo:hostinfo"
-  "kickstart:kickstart [-k] [-p] <service-target>"
-  "kill:kill <signal> <service-target>"
-  "limit:limit"
-  "list:list [service-name]"
-  "load:load [-wF] [-S sessiontype] [-D searchpath] <service-path ...>"
-  "managername:managername"
-  "managerpid:managerpid"
-  "manageruid:manageruid"
-  "plist:plist [segment,section] Mach-O"
-  "print:print <domain-target> | <service-target>"
-  "print-cache:print-cache"
-  "print-disabled:print-disabled domain-target"
-  "procinfo:procinfo pid"
-  "reboot:reboot [system|halt|userspace|logout|apps] [-s]"
-  "remove:remove label"
-  "resolveport:resolveport owner-pid port-name"
-  "setenv:setenv key value"
-  "start:start label"
-  "stop:stop label"
-  "submit:submit -l label [-p executable] [-o stdout-path] [-e stderr-path] -- command [args]"
-  "unload:unload [-wF] [-S sessiontype] [-D searchpath] paths ..."
-  "unsetenv:unsetenv key"
-  "variant:variant"
-  "version:version"
-  "bootshell:bootshell [continue]"
-  "print-token:print-token <xpc token>"
-  "dump-xsc:dump-xsc <name>"
-  "dumpjpcategory:dumpjpcategory"
-  "dumpstate:dumpstate"
+	"bootstrap:Bootstraps a domain or a service into a domain"
+	"bootout:Tears down a domain or removes a service from a domain"
+	"enable:Enables an existing service"
+	"disable:Disables an existing service"
+	"kickstart:Forces an existing service to start"
+	"attach:Attach the system's debugger to a service"
+	"debug:Configures the next invocation of a service for debugging"
+	"kill:Sends a signal to the service instance"
+	"blame:Prints the reason a service is running"
+	"print:Prints a description of a domain or service"
+	"print-cache:Prints information about the service cache"
+	"print-disabled:Prints which services are disabled"
+	"plist:Prints a property list embedded in a binary (targets the Info.plist by default)"
+	"procinfo:Prints port information about a process"
+	"hostinfo:Prints port information about the host"
+	"resolveport:Resolves a port name from a process to an endpoint in launchd"
+	"limit:Reads or modifies launchd's resource limits"
+	"examine:Runs the specified analysis tool against launchd in a non-reentrant manner"
+	"config:Modifies persistent configuration parameters for launchd domains"
+	"dumpstate:Dumps launchd state to stdout"
+	"dumpjpcategory:Dumps the jetsam properties category for all services"
+	"reboot:Initiates a system reboot of the specified type"
+	"bootshell:Brings the system up from single-user mode with a console shell"
+	"load:Recommended alternatives: bootstrap | enable. Bootstraps a service or directory of services"
+	"unload:Recommended alternatives: bootout | disable. Unloads a service or directory of services"
+	"remove:Unloads the specified service name"
+	"list:Lists information about services"
+	"start:Starts the specified service"
+	"stop:Stops the specified service if it is running"
+	"setenv:Sets the specified environment variables for all services within the domain"
+	"unsetenv:Unsets the specified environment variables for all services within the domain"
+	"getenv:Gets the value of an environment variable from within launchd"
+	"bsexec:Execute a program in another process' bootstrap context"
+	"asuser:Execute a program in the bootstrap context of a given user"
+	"submit:Submit a basic job from the command line"
+	"managerpid:Prints the PID of the launchd controlling the session"
+	"manageruid:Prints the UID of the current launchd session"
+	"managername:Prints the name of the current launchd session"
+	"error:Prints a description of an error"
+	"variant:Prints the launchd variant"
+	"version:Prints the launchd version"
+	"help:Prints the usage for a given subcommand"
 )
 
 # Helpers ----------------------------------------------------------
 
-
 _d() {
-	echo "$*" >> /var/tmp/launchctl.log
+	echo "$@" >> /var/tmp/launchctl.log
 }
 
 # Return list of candidate plist paths that look like Launch* dirs under ~/Library and /Library
@@ -73,12 +74,28 @@ _launchctl_paths() {
   print -l -- "${raw[@]}" 2>/dev/null
 }
 
+__launchctl_list_asids() {
+	# audit session identifiers
+	# TODO: Implement this function
+	echo
+}
+
 _launchctl_list_pids() {
-  ps axo pid= 2>/dev/null | awk '{print $1}' | sort -n
+  ps axo pid= | awk '{print $1}' | sort -n
+}
+
+_launchctl_list_pids_nice() {
+  ps axo pid=,command= | awk '{print $1 ":" $2}' | sort -n
 }
 
 _launchctl_list_uids() {
-  dscl . -list /Users UniqueID 2>/dev/null \
+  dscl . -list /Users UniqueID \
+  | awk '{print $2}' \
+  | sort -n
+}
+
+_launchctl_list_uids_nice() {
+  dscl . -list /Users UniqueID \
   | awk '{print $2 ":" $1}' \
   | sort -t ":" -k 2.1,2.1r -k 1,1n # Ensure '_name' is after 'name'
 }
@@ -89,31 +106,32 @@ _launchctl_list_domains() {
 
 _launchctl_list_domain_targets() {
   # arg1 is partial value typed
-  local prefix=$1
-  case "${prefix[1]}" in
-    s) print -l system;;
-    p) _launchctl_list_pids | while read -r p; do print -l "pid/$p"; done;;
-    g|u) _launchctl_list_uids | while read -r u; do print -l "user/$u" "gui/$u"; done;;
-    l) _launchctl_list_uids | while read -r u; do print -l "login/$u"; done;;
-    *) print -l system user login gui pid;;
-  esac
+  local prefix=""
+  case "${1:0:1}" in
+    s) print -l system; return;;
+    p) prefix="pid"; _launchctl_list_pids;;
+    g) prefix="gui"; _launchctl_list_uids;;
+    l) prefix="login"; _launchctl_list_asids;;
+    u) prefix="user"; _launchctl_list_uids;;
+    *) _launchctl_list_domains; return;;
+  esac | xargs -n1 printf "$prefix/%d\n"
 }
 
 _launchctl_list_labels() {
   # filter out anonymous mach labels similar to bash version
-  launchctl list 2>/dev/null | tail -n +2 | awk '{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)' || true
+  launchctl list | tail -n +2 | awk '{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
 }
 
 _launchctl_list_started() {
-  launchctl list 2>/dev/null | tail -n +2 | awk '$1 != "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)' || true
+  launchctl list | tail -n +2 | awk '$1 != "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
 }
 
 _launchctl_list_stopped() {
-  launchctl list 2>/dev/null | tail -n +2 | awk '$1 == "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)' || true
+  launchctl list | tail -n +2 | awk '$1 == "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
 }
 
 _launchctl_list_envvars() {
-  printenv 2>/dev/null | cut -d= -f1 | sort -u || true
+  printenv | cut -d= -f1 | sort -u
 }
 
 # Complete a domain/target pattern
@@ -130,12 +148,14 @@ _launchctl_complete_domain_target() {
   local domain=${cur%%/*}
   local remainder=${cur#*/}
 
+  # TODO: make sure compadd here uses proper zstyle to show descriptions
+  zstyle ":completion:${curcontext}:values" verbose true
   case $domain in
     pid)
-      _launchctl_list_pids | while read -r p; do compadd "pid/$p"; done
+      _launchctl_list_pids_nice | while IFS=":" read -r pid desc; do compadd "pid/$pid" - "$desc"; done
       ;;
     gui|user)
-      _launchctl_list_uids | while read -r u; do compadd "${domain}/$u"; done
+      _launchctl_list_uids_nice | while IFS=":" read -r uid desc; do compadd "${domain}/$uid" - "$desc"; done
       ;;
     system|login)
       # system and login don't have simple enumerations; offer only the domain/
@@ -149,8 +169,8 @@ _launchctl_complete_domain_target() {
 
 # Main -------------------------------------------------------------
 _arguments -C \
-  '1:subcommand:->subcmd' \
-  '*:args:->args' && return 0
+	'1:subcommand:->subcmd' \
+	'*:args:->args' && return 0
 
 local cur_word="${${words[CURRENT]}:-}"
 
@@ -172,17 +192,21 @@ _d "sub: $sub"
 
 # Normalize some synonyms (e.g., print-cache is not a good function name in zsh)
 case "$sub" in
-  asuser)
-    if (( CURRENT == 3 )); then
-      _describe -V 'uids' "($(_launchctl_list_uids))" && return
-    else
-      # Consider that any usual shell command could be used now.
-      shift 3 words
-      (( CURRENT -= 3 ))
-      _normal
-      return
-    fi
-    ;;
+	asuser)
+		if (( CURRENT == 3 )); then
+			zstyle ":completion:${curcontext}:descriptions" format $'\e[1m -- %d --\e[22m'
+			zstyle ":completion:${curcontext}:values" list-separator '--'
+			zstyle ":completion:${curcontext}:values" verbose true
+			zstyle ":completion:${curcontext}:values" list-grouped true
+			_describe -V 'Main User IDs' "($(_launchctl_list_uids_nice | grep -v ':_'))"
+			_describe -V 'Underscored User IDs' "($(_launchctl_list_uids_nice | grep ':_'))"
+		else
+			# Consider that any usual shell command could be used now.
+			shift 3 words
+			(( CURRENT -= 3 ))
+			_normal
+		fi
+		;;
   attach|blame|disable|enable|kickstart)
     # domain-target or service-target
     if (( CURRENT == 3 )); then
@@ -229,9 +253,20 @@ case "$sub" in
       compadd -a pf && return
     fi
     ;;
-  bsexec|procinfo|resolveport)
+  procinfo|resolveport)
     if (( CURRENT == 3 )); then
-      _launchctl_list_pids | compadd -a - && return
+      _describe 'pids' "($(_launchctl_list_pids_nice))"
+    fi
+    # TODO: handle resolveport when there is more than one argument.
+    ;;
+  bsexec)
+    if (( CURRENT == 3 )); then
+      _describe 'pids' "($(_launchctl_list_pids_nice))"
+    else
+      # Consider that any usual shell command could be used now.
+      shift 3 words
+      (( CURRENT -= 3 ))
+      _normal
     fi
     ;;
   config)
@@ -354,19 +389,9 @@ case "$sub" in
   *)
     # Fallback: if the word looks like a file path, offer files; otherwise nothing
     if [[ $cur_word == /* || $cur_word == ~* ]]; then
-      _files && return
+      _files
+    elif (( CURRENT == 2 )); then
+      _describe 'launchctl subcommand' subcommands && return
     fi
     ;;
 esac
-
-# Default fallback: nothing specific, try file completion or generic words
-if [[ $cur_word == /* || $cur_word == ~* ]]; then
-  _files
-else
-  # No specific completion — show subcommands as a fallback when appropriate
-  if (( CURRENT == 2 )); then
-    compadd -a subcommands && return
-  fi
-fi
-
-return 0
