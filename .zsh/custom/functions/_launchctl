@@ -20,18 +20,18 @@ _d() {
 
 _launchctl_cache_policy() {
 	# rebuild if cache is more than one day old
-    local -a oldp
-    oldp=( "$1"(Nmd+1) )
-    (( $#oldp ))
+	local -a oldp
+	oldp=( "$1"(Nmd+1) )
+	(( $#oldp ))
 }
 
 # Return list of candidate plist paths that look like Launch* dirs under ~/Library and /Library
 _launchctl_paths() {
-  local -a raw
-  # Use globbing instead of external ls when possible
-  raw=(~/Library/Launch*/*(/N) /Library/Launch*/*(/N))
-  # Normalize ~ for display if needed - zsh will expand ~ itself in compadd
-  print -l -- "${raw[@]}" 2>/dev/null
+	local -a raw
+	# Use globbing instead of external ls when possible
+	raw=(~/Library/Launch*/*(/N) /Library/Launch*/*(/N))
+	# Normalize ~ for display if needed - zsh will expand ~ itself in compadd
+	print -l -- "${raw[@]}" 2>/dev/null
 }
 
 __launchctl_list_asids() {
@@ -41,57 +41,57 @@ __launchctl_list_asids() {
 }
 
 _launchctl_list_pids() {
-  ps axo pid= | awk '{print $1}' | sort -n
+	ps axo pid= | awk '{print $1}' | sort -n
 }
 
 _launchctl_list_pids_nice() {
-  ps axo pid=,command= | awk '{print $1 ":" $2}' | sort -n
+	ps axo pid=,command= | awk '{print $1 ":" $2}' | sort -n
 }
 
 _launchctl_list_uids() {
-  dscl . -list /Users UniqueID \
-  | awk '{print $2}' \
-  | sort -n
+	dscl . -list /Users UniqueID \
+	| awk '{print $2}' \
+	| sort -n
 }
 
 _launchctl_list_uids_nice() {
-  dscl . -list /Users UniqueID \
-  | awk '{print $2 ":" $1}' \
-  | sort -t ":" -k 2.1,2.1r -k 1,1n # Ensure '_name' is after 'name'
+	dscl . -list /Users UniqueID \
+	| awk '{print $2 ":" $1}' \
+	| sort -t ":" -k 2.1,2.1r -k 1,1n # Ensure '_name' is after 'name'
 }
 
 _launchctl_list_domains() {
-  print -l system user login gui pid
+	print -l system user login gui pid
 }
 
 _launchctl_list_domain_targets() {
-  # arg1 is partial value typed
-  local prefix=""
-  case "${1:0:1}" in
-    s) print -l system; return;;
-    p) prefix="pid"; _launchctl_list_pids;;
-    g) prefix="gui"; _launchctl_list_uids;;
-    l) prefix="login"; _launchctl_list_asids;;
-    u) prefix="user"; _launchctl_list_uids;;
-    *) _launchctl_list_domains; return;;
-  esac | xargs -n1 printf "$prefix/%d\n"
+	# arg1 is partial value typed
+	local prefix=""
+	case "${1:0:1}" in
+	s) print -l system; return;;
+	p) prefix="pid"; _launchctl_list_pids;;
+	g) prefix="gui"; _launchctl_list_uids;;
+	l) prefix="login"; _launchctl_list_asids;;
+	u) prefix="user"; _launchctl_list_uids;;
+	*) _launchctl_list_domains; return;;
+	esac | xargs -n1 printf "$prefix/%d\n"
 }
 
 _launchctl_list_labels() {
-  # filter out anonymous mach labels similar to bash version
-  launchctl list | tail -n +2 | awk '{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
+	# filter out anonymous mach labels similar to bash version
+	launchctl list | tail -n +2 | awk '{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
 }
 
 _launchctl_list_started() {
-  launchctl list | tail -n +2 | awk '$1 != "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
+	launchctl list | tail -n +2 | awk '$1 != "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
 }
 
 _launchctl_list_stopped() {
-  launchctl list | tail -n +2 | awk '$1 == "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
+	launchctl list | tail -n +2 | awk '$1 == "-"{print $3}' | grep -vE '0x[0-9a-fA-F]+\.(anonymous|mach_init)'
 }
 
 _launchctl_list_envvars() {
-  printenv | cut -d= -f1 | sort -u
+	printenv | cut -d= -f1 | sort -u
 }
 
 # Complete a domain/target pattern
@@ -99,32 +99,32 @@ _launchctl_list_envvars() {
 # If partial contains one slash but not two -> expand domain targets (pid/user/gui/list)
 # If contains two parts (domain/target) offer services that belong to domain (prefix match)
 _launchctl_complete_domain_target() {
-  local cur=$1
-  if [[ $cur != */* ]]; then
-    compadd -S / -- system/ user/ login/ gui/ pid/
-    return 0
-  fi
+	local cur=$1
+	if [[ $cur != */* ]]; then
+		compadd -S / -- system/ user/ login/ gui/ pid/
+		return 0
+	fi
 
-  local domain=${cur%%/*}
-  local remainder=${cur#*/}
+	local domain=${cur%%/*}
+	local remainder=${cur#*/}
 
-  # TODO: make sure compadd here uses proper zstyle to show descriptions
-  zstyle ":completion:${curcontext}:values" verbose true
-  case $domain in
-    pid)
-      _launchctl_list_pids_nice | while IFS=":" read -r pid desc; do compadd "pid/$pid" - "$desc"; done
-      ;;
-    gui|user)
-      _launchctl_list_uids_nice | while IFS=":" read -r uid desc; do compadd "${domain}/$uid" - "$desc"; done
-      ;;
-    system|login)
-      # system and login don't have simple enumerations; offer only the domain/
-      compadd -S / -- "${domain}/"
-      ;;
-    *)
-      compadd -- "${domain}/"
-      ;;
-  esac
+	# TODO: make sure compadd here uses proper zstyle to show descriptions
+	zstyle ":completion:${curcontext}:values" verbose true
+	case $domain in
+	pid)
+		_launchctl_list_pids_nice | while IFS=":" read -r pid desc; do compadd "pid/$pid" - "$desc"; done
+		;;
+	gui|user)
+		_launchctl_list_uids_nice | while IFS=":" read -r uid desc; do compadd "${domain}/$uid" - "$desc"; done
+		;;
+	system|login)
+		# system and login don't have simple enumerations; offer only the domain/
+		compadd -S / -- "${domain}/"
+		;;
+	*)
+		compadd -- "${domain}/"
+		;;
+	esac
 }
 
 # Main -------------------------------------------------------------
@@ -149,8 +149,8 @@ _d "current: $CURRENT"
 _d "words(${#words}): ${words[*]}"
 
 if [[ $state == subcmd ]]; then
-  # Offer subcommands
-  _describe 'launchctl subcommand' subcommands && return
+	# Offer subcommands
+	_describe 'launchctl subcommand' subcommands && return
 fi
 
 # If we're completing after a subcommand, dispatch on the subcommand
@@ -159,206 +159,206 @@ _d "sub: $sub"
 
 # Normalize some synonyms (e.g., print-cache is not a good function name in zsh)
 case "$sub" in
-	asuser)
-		if (( CURRENT == 3 )); then
-			zstyle ":completion:${curcontext}:descriptions" format $'\e[1m -- %d --\e[22m'
-			zstyle ":completion:${curcontext}:values" list-separator '--'
-			zstyle ":completion:${curcontext}:values" verbose true
-			zstyle ":completion:${curcontext}:values" list-grouped true
-			_describe -V 'Main User IDs' "($(_launchctl_list_uids_nice | grep -v ':_'))"
-			_describe -V 'Underscored User IDs' "($(_launchctl_list_uids_nice | grep ':_'))"
-		else
-			# Consider that any usual shell command could be used now.
-			shift 3 words
-			(( CURRENT -= 3 ))
-			_normal
-		fi
-		;;
-  attach|blame|disable|enable|kickstart)
-    # domain-target or service-target
-    if (( CURRENT == 3 )); then
-      _launchctl_complete_domain_target "$cur_word"
-      return
-    fi
-    # If more words, try completing service-target labels for the domain prefix
-    if [[ $cur_word == */*/* ]]; then
-      # cur_word like domain/target/label, we'll offer label completions (try started/stopped/all depending on command)
-      local domain_prefix=${cur_word%/*}
-      local labels
-      if [[ $sub == enable || $sub == bootstrap || $sub == attach ]]; then
-        labels=("${(@f)$( _launchctl_list_stopped )}")  # stopped
-      else
-        labels=("${(@f)$( _launchctl_list_started )}")  # started
-      fi
-      for l in $labels; do
-        compadd "${domain_prefix}/${l}"
-      done
-      return
-    fi
-    ;;
-  bootout|bootstrap)
-    # Accept domain-target as first arg; subsequent args are service-paths (file completions) OR service-targets
-    if (( CURRENT == 3 )); then
-      _launchctl_complete_domain_target "$cur_word"
-      return
-    else
-      # If the word looks like a path or starts with ~ or /, complete filesystem paths
-      if [[ $cur_word == /* || $cur_word == ~* || $cur_word == */* ]]; then
-        _files && return
-      fi
-      # Otherwise complete service labels if user typed domain/ already
-      if [[ $cur_word == */*/* ]]; then
-        local domain_prefix=${cur_word%/*}
-        for l in "${(@f)$( _launchctl_list_labels )}"; do
-          compadd "${domain_prefix}/${l}"
-        done
-        return
-      fi
-      # Otherwise offer file-like candidates found in Launch* directories
-      local -a pf
-      pf=("${(@f)$( _launchctl_paths )}")
-      compadd -a pf && return
-    fi
-    ;;
-  procinfo|resolveport)
-    if (( CURRENT == 3 )); then
-      _describe 'pids' "($(_launchctl_list_pids_nice))"
-    fi
-    # TODO: handle resolveport when there is more than one argument.
-    ;;
-  bsexec)
-    if (( CURRENT == 3 )); then
-      _describe 'pids' "($(_launchctl_list_pids_nice))"
-    else
-      # Consider that any usual shell command could be used now.
-      shift 3 words
-      (( CURRENT -= 3 ))
-      _normal
-    fi
-    ;;
-  config)
-    # config system|user parameter value
-    if (( CURRENT == 3 )); then
-      compadd system user && return
-    elif (( CURRENT == 4 )); then
-      compadd umask path && return
-    else
-      case "${words[4]}" in
-        umask) compadd -a - "${(@f)$(seq 0 7 | awk '{printf "%s ",$0}' )}" && return;;
-        path) _files && return;;
-      esac
-    fi
-    ;;
-  debug)
-    # offer domain/service target as first arg
-    if (( CURRENT == 3 )); then
-      _launchctl_complete_domain_target "$cur_word"
-      return
-    fi
-    # flags
-    if (( CURRENT == 4 )); then
-      compadd -- --program --guard-malloc --malloc-stack-logging --malloc-nano-allocator --start-suspended --debug-libraries --introspection-libraries --NSZombie --32 --stdin --stdout --stderr
-      return
-    fi
-    # handle --program path completion and --stdin/out/err path completion
-    if [[ ${words[CURRENT-1]} == --program ]]; then
-      _files && return
-    elif [[ ${words[CURRENT-1]} == --stdin || ${words[CURRENT-1]} == --stdout || ${words[CURRENT-1]} == --stderr ]]; then
-      _files && return
-    fi
-    ;;
-  error)
-    if (( CURRENT == 3 )); then
-      compadd posix mach bootstrap && return
-    elif (( CURRENT == 4 )); then
-      case "${words[3]}" in
-        bootstrap) seq 0 56 | xargs -n1 compadd ;;
-        mach) seq 1 56 | xargs -n1 compadd ;;
-        posix) seq 0 164 | xargs -n1 compadd ;;
-      esac
-      return
-    fi
-    ;;
-  getenv|unsetenv)
-    if (( CURRENT == 3 )); then
-      _d "hiyah"
-      _d "list_env: ${_launchctl_list_envvars}"
-      _launchctl_list_envvars >> "/var/tmp/launchctl.log"
-      _launchctl_list_envvars | compadd -a - && return
-    fi
-    ;;
-  help)
-    _describe 'launchctl subcommand' subcommands && return
-    # compadd -a subcommands && return
-    ;;
-  list|remove|start|stop)
-    if (( CURRENT == 3 )); then
-      _describe 'launchctl label' "($(_launchctl_list_labels))" && return
-    fi
-    ;;
-  stop)
-  	_describe 'launchctl started labels' "($(_launchctl_list_started))" && return
+asuser)
+	if (( CURRENT == 3 )); then
+		zstyle ":completion:${curcontext}:descriptions" format $'\e[1m -- %d --\e[22m'
+		zstyle ":completion:${curcontext}:values" list-separator '--'
+		zstyle ":completion:${curcontext}:values" verbose true
+		zstyle ":completion:${curcontext}:values" list-grouped true
+		_describe -V 'Main User IDs' "($(_launchctl_list_uids_nice | grep -v ':_'))"
+		_describe -V 'Underscored User IDs' "($(_launchctl_list_uids_nice | grep ':_'))"
+	else
+		# Consider that any usual shell command could be used now.
+		shift 3 words
+		(( CURRENT -= 3 ))
+		_normal
+	fi
 	;;
-  load|unload)
-    # flags for load/unload
-    if (( CURRENT == 3 )); then
-      compadd - -w -F -S -D
-      return
-    fi
-    # If last option expects known values
-    if [[ ${words[CURRENT-1]} == -S ]]; then
-      compadd Aqua Background LoginWindow StandardIO System && return
-    elif [[ ${words[CURRENT-1]} == -D ]]; then
-      compadd system local network user && return
-    fi
-    # file completions (preferring Launchd plist paths)
-    if [[ $cur_word == /* || $cur_word == ~* ]]; then
-      _files && return
-    fi
-    local -a pf
-    pf=("${(@f)$( _launchctl_paths )}")
-    compadd -a pf && return
-    ;;
-  plist)
-    if (( CURRENT == 3 )); then
-      local -a segs
-      segs=("${(@f)$(tr ':' ' ' <<< ${PATH} | xargs -I{} fd . --type x 2>/dev/null | xargs segment_dumper 2>/dev/null | sort -u )}")
-      compadd -a segs && return
-    else
-      _files && return
-    fi
-    ;;
-  submit)
-    # -l -p -o -e flags and then command after --
-    if (( CURRENT == 3 )); then
-      compadd -l -p -o -e && return
-    fi
-    if [[ ${words[CURRENT-1]} == -o || ${words[CURRENT-1]} == -e ]]; then
-      _files && return
-    elif [[ ${words[CURRENT-1]} == -p ]]; then
-      _files && return
-    fi
-    ;;
-  print)
-    # domain-target handling similar to other commands
-    if (( CURRENT == 3 )); then
-      compadd -S / -- system/ user/ login/ gui/ pid/
-      return
-    fi
-    if [[ $cur_word == */*/* ]]; then
-      local domain_prefix=${cur_word%/*}
-      for l in "${(@f)$( _launchctl_list_labels )}"; do
-        compadd "${domain_prefix}/${l}"
-      done
-      return
-    fi
-    ;;
-  *)
-    # Fallback: if the word looks like a file path, offer files; otherwise nothing
-    if [[ $cur_word == /* || $cur_word == ~* ]]; then
-      _files
-    elif (( CURRENT == 2 )); then
-      _describe 'launchctl subcommand' subcommands && return
-    fi
-    ;;
+attach|blame|disable|enable|kickstart)
+	# domain-target or service-target
+	if (( CURRENT == 3 )); then
+		_launchctl_complete_domain_target "$cur_word"
+		return
+	fi
+	# If more words, try completing service-target labels for the domain prefix
+	if [[ $cur_word == */*/* ]]; then
+		# cur_word like domain/target/label, we'll offer label completions (try started/stopped/all depending on command)
+		local domain_prefix=${cur_word%/*}
+		local labels
+		if [[ $sub == enable || $sub == bootstrap || $sub == attach ]]; then
+			labels=("${(@f)$( _launchctl_list_stopped )}")	# stopped
+		else
+			labels=("${(@f)$( _launchctl_list_started )}")	# started
+		fi
+		for l in $labels; do
+			compadd "${domain_prefix}/${l}"
+		done
+		return
+	fi
+	;;
+bootout|bootstrap)
+	# Accept domain-target as first arg; subsequent args are service-paths (file completions) OR service-targets
+	if (( CURRENT == 3 )); then
+		_launchctl_complete_domain_target "$cur_word"
+		return
+	else
+		# If the word looks like a path or starts with ~ or /, complete filesystem paths
+		if [[ $cur_word == /* || $cur_word == ~* || $cur_word == */* ]]; then
+			_files && return
+		fi
+		# Otherwise complete service labels if user typed domain/ already
+		if [[ $cur_word == */*/* ]]; then
+			local domain_prefix=${cur_word%/*}
+			for l in "${(@f)$( _launchctl_list_labels )}"; do
+				compadd "${domain_prefix}/${l}"
+			done
+			return
+		fi
+		# Otherwise offer file-like candidates found in Launch* directories
+		local -a pf
+		pf=("${(@f)$( _launchctl_paths )}")
+		compadd -a pf && return
+	fi
+	;;
+procinfo|resolveport)
+	if (( CURRENT == 3 )); then
+		_describe 'pids' "($(_launchctl_list_pids_nice))"
+	fi
+	# TODO: handle resolveport when there is more than one argument.
+	;;
+bsexec)
+	if (( CURRENT == 3 )); then
+		_describe 'pids' "($(_launchctl_list_pids_nice))"
+	else
+		# Consider that any usual shell command could be used now.
+		shift 3 words
+		(( CURRENT -= 3 ))
+		_normal
+	fi
+	;;
+config)
+	# config system|user parameter value
+	if (( CURRENT == 3 )); then
+		compadd system user && return
+	elif (( CURRENT == 4 )); then
+		compadd umask path && return
+	else
+		case "${words[4]}" in
+			umask) compadd -a - "${(@f)$(seq 0 7 | awk '{printf "%s ",$0}' )}" && return;;
+			path) _files && return;;
+		esac
+	fi
+	;;
+debug)
+	# offer domain/service target as first arg
+	if (( CURRENT == 3 )); then
+		_launchctl_complete_domain_target "$cur_word"
+		return
+	fi
+	# flags
+	if (( CURRENT == 4 )); then
+		compadd -- --program --guard-malloc --malloc-stack-logging --malloc-nano-allocator --start-suspended --debug-libraries --introspection-libraries --NSZombie --32 --stdin --stdout --stderr
+		return
+	fi
+	# handle --program path completion and --stdin/out/err path completion
+	if [[ ${words[CURRENT-1]} == --program ]]; then
+		_files && return
+	elif [[ ${words[CURRENT-1]} == --stdin || ${words[CURRENT-1]} == --stdout || ${words[CURRENT-1]} == --stderr ]]; then
+		_files && return
+	fi
+	;;
+error)
+	if (( CURRENT == 3 )); then
+		compadd posix mach bootstrap && return
+	elif (( CURRENT == 4 )); then
+		case "${words[3]}" in
+			bootstrap) seq 0 56 | xargs -n1 compadd ;;
+			mach) seq 1 56 | xargs -n1 compadd ;;
+			posix) seq 0 164 | xargs -n1 compadd ;;
+		esac
+		return
+	fi
+	;;
+getenv|unsetenv)
+	if (( CURRENT == 3 )); then
+		_d "hiyah"
+		_d "list_env: ${_launchctl_list_envvars}"
+		_launchctl_list_envvars >> "/var/tmp/launchctl.log"
+		_launchctl_list_envvars | compadd -a - && return
+	fi
+	;;
+help)
+	_describe 'launchctl subcommand' subcommands && return
+	# compadd -a subcommands && return
+	;;
+list|remove|start|stop)
+	if (( CURRENT == 3 )); then
+		_describe 'launchctl label' "($(_launchctl_list_labels))" && return
+	fi
+	;;
+stop)
+	_describe 'launchctl started labels' "($(_launchctl_list_started))" && return
+;;
+load|unload)
+	# flags for load/unload
+	if (( CURRENT == 3 )); then
+		compadd - -w -F -S -D
+		return
+	fi
+	# If last option expects known values
+	if [[ ${words[CURRENT-1]} == -S ]]; then
+		compadd Aqua Background LoginWindow StandardIO System && return
+	elif [[ ${words[CURRENT-1]} == -D ]]; then
+		compadd system local network user && return
+	fi
+	# file completions (preferring Launchd plist paths)
+	if [[ $cur_word == /* || $cur_word == ~* ]]; then
+		_files && return
+	fi
+	local -a pf
+	pf=("${(@f)$( _launchctl_paths )}")
+	compadd -a pf && return
+	;;
+plist)
+	if (( CURRENT == 3 )); then
+		local -a segs
+		segs=("${(@f)$(tr ':' ' ' <<< ${PATH} | xargs -I{} fd . --type x 2>/dev/null | xargs segment_dumper 2>/dev/null | sort -u )}")
+		compadd -a segs && return
+	else
+		_files && return
+	fi
+	;;
+submit)
+	# -l -p -o -e flags and then command after --
+	if (( CURRENT == 3 )); then
+		compadd -l -p -o -e && return
+	fi
+	if [[ ${words[CURRENT-1]} == -o || ${words[CURRENT-1]} == -e ]]; then
+		_files && return
+	elif [[ ${words[CURRENT-1]} == -p ]]; then
+		_files && return
+	fi
+	;;
+print)
+	# domain-target handling similar to other commands
+	if (( CURRENT == 3 )); then
+		compadd -S / -- system/ user/ login/ gui/ pid/
+		return
+	fi
+	if [[ $cur_word == */*/* ]]; then
+		local domain_prefix=${cur_word%/*}
+		for l in "${(@f)$( _launchctl_list_labels )}"; do
+			compadd "${domain_prefix}/${l}"
+		done
+		return
+	fi
+	;;
+*)
+	# Fallback: if the word looks like a file path, offer files; otherwise nothing
+	if [[ $cur_word == /* || $cur_word == ~* ]]; then
+		_files
+	elif (( CURRENT == 2 )); then
+		_describe 'launchctl subcommand' subcommands && return
+	fi
+	;;
 esac
