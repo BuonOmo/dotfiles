@@ -1,0 +1,13 @@
+#compdef dotf
+
+if (( CURRENT == 1 )); then
+	_describe 'dotf specific commands' '("doctor:Check if everything works fine.")'
+
+	local -a aliases
+	aliases=("${(@f)$(alias | grep "='git" | cut -d= -f1)}")
+
+	_describe 'git aliases' aliases
+fi
+
+service=git
+_git
