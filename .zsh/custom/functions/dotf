@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # Helper to manipulate dotfiles.
 # Usage:
 #   dotf                 # (un)aliases git to dotf, making it like using git normally (ex: dotf; git pull; dotf)
@@ -13,7 +14,7 @@ dotf() {
 		local dotf_status=0
 		check() {
 			local curr_status="$?"
-			if (( curr_status == 0 )); then
+			if ((curr_status == 0)); then
 				echo "✅  $1"
 			else
 				echo "❌  $1\n"
@@ -49,7 +50,7 @@ dotf() {
 			over _MonoLisa_, hence feel free to customize.
 		CURE
 
-		! (( ${+_comps[todo]} ))
+		! ((${+_comps[todo]}))
 		check 'No default zsh completion for `todo`' <<-CURE
 			Remove the default todo completion.
 
@@ -64,13 +65,15 @@ dotf() {
 		CURE
 
 		[[ "$(which sleep)" =~ "coreutils" ]]
-		check 'Gnu coreutils correctly installed' < <(brew info coreutils)
+		check 'Gnu coreutils correctly installed' < <(
+			(($? != 0)) && brew info coreutils | awk '/^==>/{f=0} f{print} /^==> Caveats/{f=1}'
+		)
 
 		return $dotf_status
 	}
 
 	local unaliased="$aliases[$1]"
-	if (( $# == 0 )); then # Env mode
+	if (($# == 0)); then # Env mode
 		if [[ "$aliases[git]" = "dotf" ]]; then
 			unalias git
 			add-zsh-hook -d precmd __dotf_hook
