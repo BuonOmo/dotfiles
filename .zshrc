@@ -103,6 +103,12 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p --paging always'"
 
 # Lazy load ruby/rbenv related stuff (see npm below for a more canonical example).
 if [[ -d "$HOME/.rbenv" ]]; then
+	# Exporting the path help mitigating issues we can have when ruby
+	# is started in a shebang with `env`. `env` is looking for a script
+	# before a function, and the only script in path is the ruby default
+	# installation. We could make a symlink, but this would mean overcoming
+	# MacOS security measures. Easier to just export the path.
+	export PATH="$HOME/.rbenv/shims:${PATH}"
 	shims=($HOME/.rbenv/shims/* rbenv)
 	shims=(${shims:t})
 	for shim in $shims; do
