@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+output="$(autojump ${@})"
+
+if [[ -d "${output}" ]]; then
+	zed "${output}"
+else
+	echo "autojump: directory '${@}' not found"
+	exit 1
+fi

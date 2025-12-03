@@ -158,8 +158,8 @@ emcc() {
 }
 
 # And autojump
-j() {
-	unfunction j
+__load_autojump() {
+	unfunction j z
 	local autojump_path="$HOMEBREW_PREFIX/etc/profile.d/autojump.sh"
 	if [ -f "$autojump_path" ]; then
 		source "$autojump_path"
@@ -176,8 +176,9 @@ j() {
 		fi
 		return 1
 	fi
-	j "$@"
 }
+j() {__load_autojump;j "$@"}
+z() {__load_autojump;z "$@"}
 
 # https://wiki-dev.bash-hackers.org/scripting/debuggingtips
 # If website not accessible, try adding `83.243.40.67 wiki.bash-hackers.org`
