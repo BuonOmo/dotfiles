@@ -1,12 +1,20 @@
 #compdef dotf
 
-if (( CURRENT == 1 )); then
-	_describe 'dotf specific commands' '("doctor:Check if everything works fine.")'
+if (( CURRENT == 2 )); then
+	if [[ $words[$CURRENT] == "g"* ]]; then
+		local -a git_aliases
+		#         values matching given patten
+		#                     v
+		#      "${(kv)aliases[(R)git *]}"
+		#          ^^
+	    # show keys and values
+		for key value in ${(kv)aliases[(R)git *]}; git_aliases+=("$key:$value")
 
-	local -a aliases
-	aliases=("${(@f)$(alias | grep "='git" | cut -d= -f1)}")
-
-	_describe 'git aliases' aliases
+		_describe 'git aliases' git_aliases
+		return
+	else
+		_describe 'dotf specific commands' '("doctor:Check if everything works fine.")'
+	fi
 fi
 
 service=git
