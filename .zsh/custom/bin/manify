@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -e
+
+die() {
+	>&2 echo "$0: $1"
+	return 1
+}
+
+in_man_path() {
+	[[ ":$(manpath):" == *":$1:"* ]]
+}
+
+(( $# != 2 )) && die "wrong number of arguments\nusage: $0 <section> <command>"
+
+man_path=$(manpath)
+base_path="/usr/local/share/man"
+
+if ! in_man_path "$base_path"; then
+	if command -v brew &>/dev/null; then
+		base_path="$(brew --prefix)/share/man"
+	else
+		base_path="/usr/share/man"
+	fi
+fi
+
+in_man_path "$base_path" || die "could not find a proper manpath"
+
+full_path="$base_path/man$1/$2.$1"
+[[ -f "$full_path" ]] && die "file already exists ($full_path)"
+
+help2man -s $1 $2 > $full_path
