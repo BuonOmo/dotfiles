@@ -26,6 +26,11 @@
 	use-http = "!for remote in $(git remote); do git remote set-url $remote $(git remote get-url $remote | sed -E 's,git@github\\.com:,https://github.com/,'); done"
 	change-protocol = "!bash -c \"if [[ $(git remote get-url origin) == https* ]]; then git use-ssh; else git use-http; fi\""
 	switch-protocol = change-protocol
+	# https://leahneukirchen.org/dotfiles/.gitconfig
+	which = "!_() { git config --global --get alias.$1;};_"
+	leg = log --date=short --pretty='%cd %h%d %aE: %s'
+	rank = shortlog -sn --no-merges
+	conventional = "!bash -c \"git log --pretty=format:'%s' | env rg --only-matching '^(\\w+(\\(.*?\\))?):' | sort --unique\""
 [diff]
 	tool = vscode
 [difftool "vscode"]
