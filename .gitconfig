@@ -73,3 +73,6 @@
 	gpgsign = true
 [add "interactive"]
 	useBuiltin = false
+[safe]
+	directory = /Library/Keyboard Layouts/bepo.bundle
+	directory = /Library/Keyboard Layouts/bepo.bundle/Contents

@@ -9,11 +9,11 @@ module EnumFork
       # (forks - 1).times { }
       each_slice((size.to_f / forks).ceil).map do |slice|
         Thread.fork { slice.map { |*a, **kw| yield(*a, **kw) } }
-      end.map(&:join).flat_map(&:value)
+      end.flat_map(&:value)
     else
       map do |*a, **kw|
         Thread.fork { yield(*a, **kw) }
-      end.map(&:join).map(&:value)
+      end.map(&:value)
     end
   end
 end
@@ -23,11 +23,12 @@ Enumerable.include EnumFork
 module Debug
   module_function
 
-  def say(*args, **kwargs)
-    puts ?v * 120
-    puts Internal.caller_loc
-    pp(*args, **kwargs)
-    puts ?^ * 120
+  def say(*args, out: STDOUT)
+    require 'pp'
+    out.puts ?v * 120
+    out.puts Internal.caller_loc
+    args.each { |arg| PP.pp(arg, out) }
+    out.puts ?^ * 120
     puts
   end
 
@@ -120,6 +121,9 @@ module MethodExt
       system(editor, sl)
     end
   end
+  alias_method :edit, :goto
+  alias_method ENV.fetch("EDITOR", "zed").to_sym, :goto
+
 end
 Method.prepend MethodExt
 UnboundMethod.prepend MethodExt
@@ -138,6 +142,8 @@ class Module
       system(editor, csl)
     end
   end
+  alias_method :edit, :const_goto
+  alias_method ENV.fetch("EDITOR", "zed").to_sym, :const_goto
 end
 
 ## `#methods` with a numeric argument to look in a range of ancestors.
