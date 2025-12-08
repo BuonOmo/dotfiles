@@ -91,11 +91,16 @@ source $ZSH_CUSTOM/aliases
 
 type brew &>/dev/null && fpath=( "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath )
 
+
 # Ruby stuff
 
-export RUBYOPT="-r$HOME/.ruby/debug.rb -I$HOME/Dev/misc"
-
+export RUBY_CUSTOM="$HOME/.ruby"
+export RUBYOPT="-r$RUBY_CUSTOM/debug.rb -I$HOME/Dev/misc"
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+
+# Python stuff
+
+export PYTHONPATH="$HOME/.python:$PYTHONPATH"
 
 # Better man experience
 # Source: https://github.com/junegunn/fzf/wiki/examples#man-pages
