@@ -7,24 +7,156 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "theme": "Atelier Forest Dark",
-  "buffer_font_size": 14,
-  "buffer_font_family": "MonoLisa Custom",
-  "buffer_font_features": {
-    "calt": true,
-    "ss01": true
-  },
-  "format_on_save": "on",
-  "hard_tabs": true,
-  "autosave": "on_focus_change",
-  "ensure_final_newline_on_save": true,
-  "remove_trailing_whitespace_on_save": true,
-  "terminal": {
-    "copy_on_select": true
-  },
-  "language_overrides": {
-    "Markdown": {
-      "soft_wrap": "none"
-    }
-  }
+	"sticky_scroll": {
+		"enabled": true // Whether to stick scopes to the top of the editor. Disabled by default.
+	},
+	"git": {
+		"inline_blame": {
+			"show_commit_summary": true
+		}
+	},
+	"tabs": {
+		"file_icons": true,
+		"git_status": true
+	},
+	"show_edit_predictions": true,
+	"debugger": {
+		"dock": "right"
+	},
+	"bottom_dock_layout": "left_aligned",
+	"icon_theme": "Material Icon Theme",
+	"agent": {
+		"always_allow_tool_actions": true,
+		"profiles": {
+			"write++": {
+				"name": "Write++",
+				"tools": {
+					"web_search": true,
+					"thinking": true,
+					"terminal": true,
+					"read_file": true,
+					"open": true,
+					"now": true,
+					"move_path": false,
+					"list_directory": true,
+					"grep": true,
+					"find_path": true,
+					"fetch": true,
+					"edit_file": true,
+					"diagnostics": true,
+					"create_directory": true,
+					"copy_path": true
+				},
+				"enable_all_context_servers": false,
+				"context_servers": {}
+			}
+		},
+		"default_profile": "write",
+		"inline_assistant_model": {
+			"provider": "copilot_chat",
+			"model": "gpt-4.1"
+		},
+		"default_model": {
+			"provider": "copilot_chat",
+			"model": "gpt-5-mini"
+		}
+	},
+	"features": {
+		"edit_prediction_provider": "copilot"
+	},
+	"ssh_connections": [
+		{
+			"host": "192.168.0.27",
+			"username": "freebox",
+			"args": ["-i", "~/.ssh/id_box"],
+			"projects": [
+				{
+					"paths": ["/etc/nginx"]
+				},
+				{
+					"paths": ["~/immich-app"]
+				}
+			],
+			"nickname": "Immich"
+		}
+	],
+	"theme": "my macOS Classic Dark",
+	"buffer_font_size": 14,
+	"buffer_font_family": "MonoLisa Custom",
+	"buffer_font_features": {
+		"calt": true,
+		"ss01": true
+	},
+	"max_tabs": 5,
+	"format_on_save": "on",
+	"hard_tabs": true,
+	"autosave": "on_focus_change",
+	"ensure_final_newline_on_save": true,
+	"remove_trailing_whitespace_on_save": true,
+	"terminal": {
+		"alternate_scroll": "on",
+		"copy_on_select": true,
+		"option_as_meta": false,
+		"blinking": "on",
+		"cursor_shape": "bar"
+	},
+	"languages": {
+		"Python": {
+			"show_edit_predictions": false
+		},
+		"Markdown": {
+			"soft_wrap": "none",
+			"remove_trailing_whitespace_on_save": false,
+			"format_on_save": "off"
+		},
+		"SQL": {
+			"format_on_save": "off"
+		},
+		"CSS": {
+			"prettier": {
+				"allowed": true
+			}
+		},
+		"JavaScript": {
+			"prettier": {
+				"allowed": true
+			}
+		},
+		"HTML": {
+			"prettier": {
+				"allowed": true
+			}
+		},
+		"Ruby": {
+			"language_servers": ["ruby-lsp"]
+		},
+		"Shell Script": {
+			"format_on_save": "on",
+			"formatter": {
+				"external": {
+					"command": "shfmt",
+					"arguments": ["--filename", "{buffer_path}"]
+				}
+			}
+		}
+	},
+	"lsp": {
+		"rust-analyzer": {
+			"binary": {
+				"path": "/Users/ody/.cargo/bin/rust-analyzer"
+			}
+		}
+		// 	"solargraph": {
+		// 		"settings": {
+		// 			"use_bundler": false
+		// 		}
+		// 	}
+	},
+	"prettier": {
+		"singleQuote": true,
+		"doubleQuote": false,
+		"semi": false,
+		// "tabWidth": 4,
+		"useTabs": true
+	}
 }
