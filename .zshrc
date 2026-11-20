@@ -15,7 +15,7 @@ export ZSH_CUSTOM=$HOME/.zsh/custom
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="crunchrobby" # https://ulysse.md/2021/07/18/Unexpected-long-running-command.html
+ZSH_THEME="" # Using starship.
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -73,7 +73,6 @@ plugins=(
 	git
 	gitfast
 	rust
-	zsh-command-time
 	zsh-completions
 	zsh-autosuggestions
 )
@@ -190,8 +189,14 @@ z() {__load_autojump;z "$@"}
 # to /etc/hosts.
 export PS4='+(${BASH_SOURCE:-}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
-
 eval "$(direnv hook zsh)"
+eval "$(starship init zsh)"
+
+# Refresh the prompt every X seconds
+TMOUT=60
+TRAPALRM() {
+  zle reset-prompt
+}
 
 alias timezsh='for i in $(seq 1 10); do time zsh -lic exit; done'
 alias profzsh='USE_ZPROF=1 zsh -lic exit | bat --language=elm --plain'

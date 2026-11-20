@@ -1,0 +1,73 @@
+# https://starship.rs/config
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# right_format = ...
+
+continuation_prompt = '$jobs$battery$time$status$container$netns$os$shell[∙](bright-black) '
+
+[c]
+disabled = true
+
+[cmd_duration]
+min_time = 999
+show_notifications = true
+min_time_to_notify = 600_000 # 10m
+
+[git_metrics]
+disabled = true
+
+[git_commit]
+tag_disabled = false
+
+[git_status]
+format = '([\[$all_status\]]($style) [($ahead_behind )](purple))'
+ahead = '⇡${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+behind = '⇣${count}'
+
+[time] # https://starship.rs/config/#time
+disabled = false
+format = '[$time]($style) '
+
+[battery]
+format = '[$symbol$percentage ]($style)'
+full_symbol = '⚡'
+
+[[battery.display]]
+threshold = 4
+style = 'bold fg:#ff2f20 bg:#ffff00'
+charging_symbol = '😮‍💨'
+discharging_symbol = '❗'
+
+[[battery.display]]
+threshold = 15
+style = 'bold fg:#ff2f20'
+charging_symbol = '🔌'
+discharging_symbol = '❗'
+
+
+[[battery.display]]
+threshold = 40
+style = 'bold yellow'
+charging_symbol = '⚡'
+discharging_symbol = '⚡'
+
+[[battery.display]]
+threshold = 100
+style = 'bold green'
+charging_symbol = '⚡'
+discharging_symbol = '⚡'
+
+# [status]
+# disabled = false
+# pipestatus = true
+
+[custom.cockroach]
+command = 'echo $(( ( $(date +%s) - $(stat -c %W "$HOME/.crdb_working") ) / 60 ))' # shows output of command
+when = ''' test -f "$HOME/.crdb_working" '''
+format = 'on 🪳 for [($output)m]($style) '
+
+[env_var.DOTF]
+variable = 'DOTF'
+format = "\u001b\\]8;;https://github.com/buonomo/dotfiles?tab=readme-ov-file#dotfiles\u001b\\\\in dotfile mode\u001b\\]8;;\u001b\\\\ "
+disabled = true
