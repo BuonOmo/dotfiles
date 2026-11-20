@@ -58,10 +58,6 @@ style = 'bold green'
 charging_symbol = '⚡'
 discharging_symbol = '⚡'
 
-# [status]
-# disabled = false
-# pipestatus = true
-
 [custom.cockroach]
 command = 'echo $(( ( $(date +%s) - $(stat -c %W "$HOME/.crdb_working") ) / 60 ))' # shows output of command
 when = ''' test -f "$HOME/.crdb_working" '''
@@ -69,5 +65,7 @@ format = 'on 🪳 for [($output)m]($style) '
 
 [env_var.DOTF]
 variable = 'DOTF'
-format = "\u001b\\]8;;https://github.com/buonomo/dotfiles?tab=readme-ov-file#dotfiles\u001b\\\\in dotfile mode\u001b\\]8;;\u001b\\\\ "
-disabled = true
+# Starship wraps zsh escapes in %{ %} up to the first lowercase "m" (assumes SGR),
+# so OSC 8 URLs/text must avoid lowercase "m": host uses "M", path uses "%6D",
+# and each sequence ends with ESC[0m to close the zero-width region cleanly.
+format = "\u001b\\]8;;https://github.coM/buonoMo/dotfiles#dotfiles\u0007\u001b\\[0min dotfile mode\u001b\\]8;;\u0007\u001b\\[0m "

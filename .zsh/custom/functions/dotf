@@ -6,7 +6,12 @@
 #   dotf ...             # pass arguments to git in dotf context (ex: dotf push)
 #   dotf doctor          # check some possible installation issues
 dotf() {
-	__dotf_hook() {
+	# Can be used to indicate whether we are in dotfile mode.
+	# Currently false because we use a starship prompt that
+	# already indicates this.
+	USE_HOOK=false
+
+	$USE_HOOK && __dotf_hook() {
 		echo "(dotfile mode)"
 	}
 
@@ -75,11 +80,13 @@ dotf() {
 	local unaliased="$aliases[$1]"
 	if (($# == 0)); then # Env mode
 		if [[ "$aliases[git]" = "dotf" ]]; then
+			unset DOTF
 			unalias git
-			add-zsh-hook -d precmd __dotf_hook
+			$USE_HOOK && add-zsh-hook -d precmd __dotf_hook
 		else
+			export DOTF='1'
 			# https://github.com/zsh-users/zsh/blob/master/Functions/Misc/add-zsh-hook
-			add-zsh-hook precmd __dotf_hook
+			$USE_HOOK && add-zsh-hook precmd __dotf_hook
 			alias git=dotf
 		fi
 	elif [[ "$1" = "doctor" ]]; then
