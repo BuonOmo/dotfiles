@@ -201,6 +201,8 @@ TRAPALRM() {
   zle reset-prompt
 }
 add-zsh-hook precmd _align_tmout
+autoload -Uz add-zle-hook-widget
+add-zle-hook-widget line-pre-redraw _align_tmout
 
 alias timezsh='for i in $(seq 1 10); do time zsh -lic exit; done'
 alias profzsh='USE_ZPROF=1 zsh -lic exit | bat --language=elm --plain'
