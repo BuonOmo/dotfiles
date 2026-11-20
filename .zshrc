@@ -193,10 +193,14 @@ eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 
 # Refresh the prompt every X seconds
-TMOUT=60
+_align_tmout() {
+  TMOUT=$(( 60 - EPOCHSECONDS % 60 ))
+}
 TRAPALRM() {
+  TMOUT=60
   zle reset-prompt
 }
+add-zsh-hook precmd _align_tmout
 
 alias timezsh='for i in $(seq 1 10); do time zsh -lic exit; done'
 alias profzsh='USE_ZPROF=1 zsh -lic exit | bat --language=elm --plain'

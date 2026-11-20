@@ -27,6 +27,7 @@ behind = '⇣${count}'
 
 [time] # https://starship.rs/config/#time
 disabled = false
+time_format = '%H:%M'
 format = '[$time]($style) '
 
 [battery]
