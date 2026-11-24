@@ -200,7 +200,8 @@ _align_tmout() {
 TRAPALRM() {
   TMOUT=$_PROMPT_TIMEOUT
   # Force starship to log errors only, otherwise it will spam
-  # the terminal with warnings.
+  # the terminal with warnings. `local -x` scops within the
+  # function and exports to env.
   local -x STARSHIP_LOG=ERROR
   zle reset-prompt
 }
