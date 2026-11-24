@@ -193,11 +193,15 @@ eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 
 # Refresh the prompt every X seconds
+_PROMPT_TIMEOUT=60
 _align_tmout() {
-  TMOUT=$(( 60 - EPOCHSECONDS % 60 ))
+  TMOUT=$(( $_PROMPT_TIMEOUT - EPOCHSECONDS % $_PROMPT_TIMEOUT ))
 }
 TRAPALRM() {
-  TMOUT=60
+  TMOUT=$_PROMPT_TIMEOUT
+  # Force starship to log errors only, otherwise it will spam
+  # the terminal with warnings.
+  local -x STARSHIP_LOG=ERROR
   zle reset-prompt
 }
 add-zsh-hook precmd _align_tmout
