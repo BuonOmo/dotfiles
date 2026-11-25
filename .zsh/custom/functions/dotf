@@ -96,5 +96,3 @@ dotf() {
 		git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 	fi
 }
-
-dotf "$@"
