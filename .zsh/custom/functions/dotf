@@ -92,7 +92,7 @@ dotf() {
 	elif [[ "$1" = "doctor" ]]; then
 		dotf_doctor
 	elif [[ "$unaliased" = "git "* ]]; then # Alias resolving
-		eval "${unaliased/git/dotf} ${@:2}"
+		eval "${unaliased/git/dotf} ${(q)@:2}"
 	else # Default
 		git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 	fi
