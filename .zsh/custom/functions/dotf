@@ -80,13 +80,12 @@ dotf() {
 	local unaliased="$aliases[$1]"
 	if (($# == 0)); then # Env mode
 		if [[ "$aliases[git]" = "dotf" ]]; then
+			$USE_HOOK && add-zsh-hook -d precmd __dotf_hook
 			unset DOTF
 			unalias git
-			$USE_HOOK && add-zsh-hook -d precmd __dotf_hook
 		else
-			export DOTF='1'
-			# https://github.com/zsh-users/zsh/blob/master/Functions/Misc/add-zsh-hook
 			$USE_HOOK && add-zsh-hook precmd __dotf_hook
+			export DOTF='1'
 			alias git=dotf
 		fi
 	elif [[ "$1" = "doctor" ]]; then
