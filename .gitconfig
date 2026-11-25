@@ -7,6 +7,7 @@
 [user]
 	email = buonomo.ulysse@gmail.com
 	name = Ulysse Buonomo
+	signingkey = 1098E828479DA1ECCB9508103D98B88B4DE56C3A
 [branch]
 	autosetuprebase = always
 [pull]
